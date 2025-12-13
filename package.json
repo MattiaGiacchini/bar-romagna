@@ -19,6 +19,7 @@
     "better-sqlite3": "^12.5.0",
     "eslint": "^9.39.0",
     "nuxt": "^4.2.0",
+    "posthog-js": "^1.306.1",
     "primevue": "^4.4.1",
     "typescript": "^5.9.3",
     "vue": "^3.5.22",
