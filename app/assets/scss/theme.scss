@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+@font-face {
+  font-family: 'BigChunko';
+  src: url('@/assets/fonts/BigChunko.ttf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: 'Roboto', system-ui, sans-serif !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* h1 - BigChunko para títulos principales */
+h1 {
+  font-family: 'BigChunko', system-ui, sans-serif !important;
+  font-size: 2.5rem;
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+/* h2 - BigChunko para subtítulos importantes (footer) */
+h2 {
+  font-family: 'BigChunko', system-ui, sans-serif !important;
+  font-size: 1.125rem;
+  font-weight: normal;
+  line-height: 1.3;
+}
+
+/* h3, h4, h5, h6 - Roboto con jerarquía de peso */
+h3 {
+  font-family: 'Roboto', system-ui, sans-serif !important;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+h4 {
+  font-family: 'Roboto', system-ui, sans-serif !important;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+h5 {
+  font-family: 'Roboto', system-ui, sans-serif !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+h6 {
+  font-family: 'Roboto', system-ui, sans-serif !important;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Responsive headings */
+@media (min-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.125rem;
+  }
+}
+
+
+
+/* Icons - mantener primeicons */
+.pi {
+  font-family: 'primeicons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

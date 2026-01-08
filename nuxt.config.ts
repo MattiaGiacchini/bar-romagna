@@ -1,5 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-import Lara from '@primeuix/themes/lara';
+import { BarRomagnaTheme } from "./app/assets/bar-romagna-theme"
 
 export default defineNuxtConfig({
   runtimeConfig: {
@@ -9,8 +8,20 @@ export default defineNuxtConfig({
       posthogDefaults: '2025-11-30'
     }
   },
-
-  // css: ['~/assets/scss/theme.scss'],
+  css: [
+    'primeicons/primeicons.css',
+    '@/assets/scss/theme.scss'
+  ],
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://unpkg.com/primeicons@7.0.0/primeicons.css'
+        }
+      ]
+    }
+  },
   compatibilityDate: '2026-01-01',
   devtools: { enabled: true },
   modules: [
@@ -24,7 +35,10 @@ export default defineNuxtConfig({
   primevue: {
     options: {
       theme: {
-        preset: Lara
+        preset: BarRomagnaTheme,
+        options: {
+          darkModeSelector: 'none'
+        }
       }
     }
   }

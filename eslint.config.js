@@ -2,56 +2,62 @@ import vue from 'eslint-plugin-vue'
 import vueParser from 'vue-eslint-parser'
 import typescript from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
-import eslintRecommended from '@eslint/js' // ESLint recommended rules
-import prettierConfig from 'eslint-config-prettier' // Prettier configuration
+import prettierConfig from 'eslint-config-prettier'
 
 export default [
-    // Basic ESLint rules for JavaScript
     {
-        files: ['**/*.js'],
-        languageOptions: {
-            ecmaVersion: 'latest',
-            sourceType: 'module'
-        },
-        ...eslintRecommended.configs.recommended
+        ignores: ['node_modules/**', 'dist/**', '.nuxt/**', '.output/**', 'coverage/**']
     },
 
-    // Rules for Vue files
+    // TypeScript files
+    {
+        files: ['**/*.ts', '**/*.tsx'],
+        languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+                sourceType: 'module',
+                ecmaVersion: 'latest'
+            }
+        },
+        plugins: {
+            '@typescript-eslint': typescript
+        },
+        rules: {
+            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/explicit-function-return-type': 'off',
+            '@typescript-eslint/explicit-module-boundary-types': 'off'
+        }
+    },
+
+    // Vue files
     {
         files: ['**/*.vue'],
         languageOptions: {
             parser: vueParser,
             parserOptions: {
-                parser: tsParser, // Use TypeScript parser inside Vue
+                parser: tsParser,
                 sourceType: 'module',
-                ecmaVersion: 'latest',
-                extraFileExtensions: ['.vue'],
-                project: './tsconfig.json'
+                ecmaVersion: 'latest'
             }
         },
-    },
-
-    // Rules for TypeScript files
-    {
-        files: ['**/*.{ts,tsx}'],
-        languageOptions: {
-            parser: tsParser,
-            parserOptions: {
-                sourceType: 'module',
-                ecmaVersion: 'latest',
-                project: './tsconfig.eslint.json'
-            }
+        plugins: {
+            vue,
+            '@typescript-eslint': typescript
         },
-        plugins: { '@typescript-eslint': typescript },
         rules: {
-            ...typescript.configs.recommended.rules
+            // Vue rules
+            'vue/multi-word-component-names': 'off',
+            'vue/no-v-html': 'warn',
+            'vue/require-default-prop': 'off',
+            'vue/require-explicit-emits': 'off',
+            'vue/html-self-closing': 'off',
+
+            // TypeScript in Vue
+            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-explicit-any': 'warn'
         }
     },
 
-    {
-        ...prettierConfig
-    }
+    prettierConfig
 ]
-
-// Ignore unnecessary files
-export const ignores = ['node_modules', 'dist', 'tests', 'coverage', 'public', '.vscode']

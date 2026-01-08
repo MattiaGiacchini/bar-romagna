@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "dev-network": "npm run dev -- --host 0.0.0.0",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -20,6 +21,7 @@
     "eslint": "^9.39.0",
     "nuxt": "^4.2.0",
     "posthog-js": "^1.306.1",
+    "primeicons": "^7.0.0",
     "primevue": "^4.4.1",
     "typescript": "^5.9.3",
     "vue": "^3.5.22",
@@ -28,7 +30,6 @@
   "devDependencies": {
     "@primevue/nuxt-module": "^4.4.1",
     "eslint-config-prettier": "^10.1.8",
-    "sass": "^1.96.0",
-    "vite-tsconfig-paths": "^5.1.4"
+    "sass": "^1.96.0"
   }
 }
