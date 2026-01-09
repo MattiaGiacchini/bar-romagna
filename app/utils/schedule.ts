@@ -34,7 +34,6 @@ export const barSchedules = {
     '12-26': { open: null, close: null, name: 'Santo Stefano' }, // Santo Stefano - Closed
     '01-01': { open: null, close: null, name: 'Capodanno' }, // New Year - Closed
     '01-06': { open: '06:00', close: '13:00', name: 'Epifania' }, // Epifania - Special hours
-    '01-10': { open: '06:00', close: '12:00', name: 'Natale Finto' }, // Epifania - Special hours
     // Add more special dates as needed
     // Example for specific year: '2025-12-24': { open: '05:00', close: '15:00', name: 'Vigilia di Natale' }
   } as SpecialSchedules

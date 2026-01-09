@@ -94,7 +94,14 @@ export const useSchedule = (schedules: { weekly: WeeklySchedule; special: Specia
         const opensSoonMinutes = openMinutes - 30
         const opensSoon = currentMinutes >= opensSoonMinutes && currentMinutes < openMinutes
 
+        // Check if closing soon (30 minutes before close)
+        const closesSoonMinutes = closeMinutes - 30
+        const closesSoon = isOpen && currentMinutes >= closesSoonMinutes
+
         if (isOpen) {
+            if (closesSoon) {
+                return { status: 'closingSoon', label: 'CHIUDE TRA POCO', severity: 'warn' as const }
+            }
             return { status: 'open', label: 'APERTO ORA', severity: 'primary' as const }
         } else if (opensSoon) {
             return { status: 'openingSoon', label: 'APRE TRA POCO', severity: 'warn' as const }
