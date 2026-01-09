@@ -12,7 +12,7 @@ const t = {
   nav: {
     home: 'Inicio',
     contacts: 'Contatto',
-    contactsV2: 'Contatto V2'
+    menu: 'Menu',
   },
   footer: {
     schedule: {
@@ -27,6 +27,14 @@ const t = {
     social: 'Seguici'
   }
 }
+
+// Navegación centralizada
+const navItems = [
+  { label: t.nav.home, icon: 'pi pi-home', route: '/' },
+  { label: t.nav.contacts, icon: 'pi pi-phone', route: '/contacts' },
+  { label: t.nav.menu, icon: 'pi pi-book', route: '/menu' }
+]
+
 // Mobile menu state
 const mobileMenuVisible = ref(false)
 
@@ -79,18 +87,13 @@ const goHome = () => {
           />
           <nav class="nav-desktop">
             <Button
-                :label="t.nav.home"
-                icon="pi pi-home"
+                v-for="item in navItems"
+                :key="item.route"
+                :label="item.label"
+                :icon="item.icon"
                 text
                 iconPos="left"
-                @click="() => navigateTo('/')"
-            />
-            <Button
-                :label="t.nav.contacts"
-                icon="pi pi-phone"
-                text
-                iconPos="left"
-                @click="() => navigateTo('/contacts')"
+                @click="() => navigateTo(item.route)"
             />
           </nav>
         </div>
@@ -108,13 +111,15 @@ const goHome = () => {
       </template>
 
       <nav class="mobile-nav">
-        <NuxtLink to="/" class="mobile-nav-item" @click="closeMobileMenu">
-          <i class="pi pi-home"></i>
-          <span>{{ t.nav.home }}</span>
-        </NuxtLink>
-        <NuxtLink to="/contacts" class="mobile-nav-item" @click="closeMobileMenu">
-          <i class="pi pi-phone"></i>
-          <span>{{ t.nav.contacts }}</span>
+        <NuxtLink
+            v-for="item in navItems"
+            :key="item.route"
+            :to="item.route"
+            class="mobile-nav-item"
+            @click="closeMobileMenu"
+        >
+          <i :class="item.icon"></i>
+          <span>{{ item.label }}</span>
         </NuxtLink>
       </nav>
     </Sidebar>
@@ -209,7 +214,7 @@ const goHome = () => {
 }
 
 // ============================================
-// HEADER - Fixed Height
+// HEADER - Sin límite hasta 4K
 // ============================================
 .app-header {
   background: var(--p-surface-0);
@@ -221,10 +226,18 @@ const goHome = () => {
 }
 
 .header-content {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 1rem;
   height: 100%;
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem;
+  }
+
+  @media (min-width: 1920px) {
+    max-width: 1920px;
+  }
 }
 
 // Mobile Header
@@ -336,7 +349,7 @@ const goHome = () => {
 }
 
 // ============================================
-// MAIN CONTENT - Centralized padding
+// MAIN CONTENT - Sin límite hasta 4K
 // ============================================
 .app-main {
   flex: 1;
@@ -352,7 +365,7 @@ const goHome = () => {
 }
 
 // ============================================
-// FOOTER
+// FOOTER - Sin límite hasta 4K
 // ============================================
 .app-footer {
   background: var(--p-primary-800);
@@ -366,12 +379,16 @@ const goHome = () => {
 }
 
 .footer-content {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 1rem;
 
   @media (min-width: 1024px) {
     padding: 0 2rem;
+  }
+
+  @media (min-width: 1920px) {
+    max-width: 1920px;
   }
 }
 

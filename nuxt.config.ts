@@ -30,8 +30,34 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxt/ui',
     '@nuxt/content',
-    '@primevue/nuxt-module'
+    '@primevue/nuxt-module',
+    '@nuxtjs/i18n'
   ],
+  i18n: {
+    locales: [
+      {
+        code: 'it',
+        iso: 'it-IT',
+        file: 'it.ts',
+        name: 'Italiano'
+      },
+      {
+        code: 'en',
+        iso: 'en-US',
+        file: 'en.ts',
+        name: 'English'
+      },
+      {
+        code: 'es',
+        iso: 'es-ES',
+        file: 'es.ts',
+        name: 'Español'
+      }
+    ],
+    defaultLocale: 'it',
+    langDir: 'locales',
+    strategy: 'no_prefix',
+  },
   primevue: {
     options: {
       theme: {
