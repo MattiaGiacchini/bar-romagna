@@ -1,104 +1,115 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { barSchedules } from '@/utils/schedule'
 import { useSchedule } from '@/composables/useSchedule'
 
-// Use centralized schedules and i18n
+const { t, locale, locales, setLocale } = useI18n()
 const { displaySchedule } = useSchedule(barSchedules)
 
-// i18n interno del layout
-const t = {
-  title: 'Bar Romagna',
-  nav: {
-    home: 'Inicio',
-    contacts: 'Contatto',
-    menu: 'Menu',
-  },
-  footer: {
-    schedule: {
-      title: 'Orario'
-    },
-    contact: {
-      title: 'Contatti',
-      phoneNadia: '+39 339 593 6104',
-      phoneMattia: '+39 347 37 46 945',
-      email: 'barromagna.cervia@gmail.com'
-    },
-    social: 'Seguici'
-  }
-}
+const navItems = computed(() => [
+  { label: t('nav.home'), icon: 'pi pi-home', route: '/' },
+  { label: t('nav.contacts'), icon: 'pi pi-phone', route: '/contacts' },
+  { label: t('nav.menu'), icon: 'pi pi-book', route: '/menu' },
+])
 
-// Navegación centralizada
-const navItems = [
-  { label: t.nav.home, icon: 'pi pi-home', route: '/' },
-  { label: t.nav.contacts, icon: 'pi pi-phone', route: '/contacts' },
-  { label: t.nav.menu, icon: 'pi pi-book', route: '/menu' }
-]
-
-// Mobile menu state
 const mobileMenuVisible = ref(false)
+const langMenuVisible = ref(false)
 
-const toggleMobileMenu = () => {
-  mobileMenuVisible.value = !mobileMenuVisible.value
-}
+const toggleMobileMenu = () => { mobileMenuVisible.value = !mobileMenuVisible.value }
+const closeMobileMenu = () => { mobileMenuVisible.value = false }
+const goHome = () => navigateTo('/')
 
-const closeMobileMenu = () => {
-  mobileMenuVisible.value = false
-}
+const currentLocale = computed(() =>
+  locales.value.find((l: { code: string }) => l.code === locale.value)
+)
 
-const goHome = () => {
-  navigateTo('/')
+const switchLocale = (code: string) => {
+  setLocale(code)
+  langMenuVisible.value = false
 }
 </script>
 
 <template>
   <div class="app-layout">
+
     <!-- ============================================ -->
-    <!-- HEADER - Fixed Height -->
+    <!-- HEADER -->
     <!-- ============================================ -->
     <header class="app-header">
       <div class="header-content">
+
         <!-- Mobile Header -->
         <div class="header-mobile">
           <Button
-              icon="pi pi-bars"
-              text
-              rounded
-              severity="primary"
-              @click="toggleMobileMenu"
-              aria-label="Menu"
+            icon="pi pi-bars"
+            text
+            rounded
+            severity="primary"
+            @click="toggleMobileMenu"
+            aria-label="Menu"
           />
           <img
-              src="/logo-horizontal.svg"
-              alt="Bar Romagna"
-              class="logo-mobile"
-              @click="goHome"
+            src="/logo-horizontal.svg"
+            alt="Bar Romagna"
+            class="logo-mobile"
+            @click="goHome"
           />
-          <div class="spacer"></div>
+          <div class="spacer" />
         </div>
 
         <!-- Desktop Header -->
         <div class="header-desktop">
           <img
-              src="/logo-horizontal.svg"
-              alt="Bar Romagna"
-              class="logo-desktop"
-              @click="goHome"
+            src="/logo-horizontal.svg"
+            alt="Bar Romagna"
+            class="logo-desktop"
+            @click="goHome"
           />
           <nav class="nav-desktop">
             <Button
-                v-for="item in navItems"
-                :key="item.route"
-                :label="item.label"
-                :icon="item.icon"
-                text
-                iconPos="left"
-                @click="() => navigateTo(item.route)"
+              v-for="item in navItems"
+              :key="item.route"
+              :label="item.label"
+              :icon="item.icon"
+              text
+              iconPos="left"
+              @click="() => navigateTo(item.route)"
             />
+            <!-- Language switcher desktop -->
+            <div class="lang-switcher">
+              <Button
+                :label="`${currentLocale?.flag} ${currentLocale?.name}`"
+                icon="pi pi-chevron-down"
+                iconPos="right"
+                text
+                class="lang-btn-current"
+                @click="langMenuVisible = !langMenuVisible"
+              />
+              <div v-if="langMenuVisible" class="lang-dropdown">
+                <button
+                  v-for="loc in locales"
+                  :key="loc.code"
+                  class="lang-option"
+                  :class="{ active: loc.code === locale }"
+                  @click="switchLocale(loc.code)"
+                >
+                  <span class="lang-flag">{{ loc.flag }}</span>
+                  <span class="lang-name">{{ loc.name }}</span>
+                </button>
+              </div>
+            </div>
           </nav>
         </div>
+
       </div>
     </header>
+
+    <!-- Click-away overlay for lang dropdown -->
+    <div
+      v-if="langMenuVisible"
+      class="lang-overlay"
+      @click="langMenuVisible = false"
+    />
 
     <!-- ============================================ -->
     <!-- MOBILE MENU SIDEBAR -->
@@ -109,23 +120,42 @@ const goHome = () => {
           <img src="/logo-horizontal.svg" alt="Bar Romagna" class="sidebar-logo" />
         </div>
       </template>
-
       <nav class="mobile-nav">
         <NuxtLink
-            v-for="item in navItems"
-            :key="item.route"
-            :to="item.route"
-            class="mobile-nav-item"
-            @click="closeMobileMenu"
+          v-for="item in navItems"
+          :key="item.route"
+          :to="item.route"
+          class="mobile-nav-item"
+          @click="closeMobileMenu"
         >
-          <i :class="item.icon"></i>
+          <i :class="item.icon" />
           <span>{{ item.label }}</span>
         </NuxtLink>
       </nav>
+
+      <!-- Language switcher in sidebar -->
+      <div class="sidebar-lang">
+        <div class="sidebar-lang-title">
+          <i class="pi pi-globe" />
+          <span>Lingua / Language</span>
+        </div>
+        <div class="sidebar-lang-grid">
+          <button
+            v-for="loc in locales"
+            :key="loc.code"
+            class="sidebar-lang-option"
+            :class="{ active: loc.code === locale }"
+            @click="switchLocale(loc.code); closeMobileMenu()"
+          >
+            <span class="lang-flag">{{ loc.flag }}</span>
+            <span class="lang-name">{{ loc.name }}</span>
+          </button>
+        </div>
+      </div>
     </Sidebar>
 
     <!-- ============================================ -->
-    <!-- MAIN CONTENT with centralized padding -->
+    <!-- MAIN CONTENT -->
     <!-- ============================================ -->
     <main class="app-main">
       <div class="main-content">
@@ -134,27 +164,28 @@ const goHome = () => {
     </main>
 
     <!-- ============================================ -->
-    <!-- FOOTER - Dark with Info -->
+    <!-- FOOTER -->
     <!-- ============================================ -->
     <footer class="app-footer">
       <div class="footer-content">
         <div class="footer-grid">
-          <!-- Horarios (usando composable) -->
+
+          <!-- Orario -->
           <div class="footer-section">
-            <div class="footer-title">{{ t.footer.schedule.title }}</div>
+            <div class="footer-title">{{ t('footer.schedule') }}</div>
             <div class="footer-info">
               <div
-                  v-for="(item, index) in displaySchedule"
-                  :key="index"
-                  class="info-row"
+                v-for="(item, index) in displaySchedule"
+                :key="index"
+                class="info-row"
               >
                 <span class="schedule-days">
                   {{ item.days }}
                   <Tag
-                      v-if="item.specialName"
-                      :value="item.specialName"
-                      severity="warn"
-                      class="special-tag-footer"
+                    v-if="item.specialName"
+                    :value="item.specialName"
+                    severity="warn"
+                    class="special-tag-footer"
                   />
                 </span>
                 <span class="schedule-hours">{{ item.hours }}</span>
@@ -162,43 +193,50 @@ const goHome = () => {
             </div>
           </div>
 
-          <!-- Contactos -->
+          <!-- Contatti -->
           <div class="footer-section">
-            <div class="footer-title">{{ t.footer.contact.title }}</div>
+            <div class="footer-title">{{ t('footer.contacts') }}</div>
             <div class="footer-info">
-              <a :href="`tel:${t.footer.contact.phoneNadia}`" class="contact-link">
-                <i class="pi pi-phone"></i>
-                Nadia: {{ t.footer.contact.phoneNadia }}
+              <a href="tel:+393395936104" class="contact-link">
+                <i class="pi pi-phone" />
+                Nadia: +39 339 593 6104
               </a>
-              <a :href="`tel:${t.footer.contact.phoneMattia}`" class="contact-link">
-                <i class="pi pi-phone"></i>
-                Mattia: {{ t.footer.contact.phoneMattia }}
+              <a href="tel:+393473746945" class="contact-link">
+                <i class="pi pi-phone" />
+                Mattia: +39 347 37 46 945
               </a>
-              <a :href="`mailto:${t.footer.contact.email}`" class="contact-link">
-                <i class="pi pi-envelope"></i>
-                {{ t.footer.contact.email }}
+              <a href="mailto:barromagna.cervia@gmail.com" class="contact-link">
+                <i class="pi pi-envelope" />
+                barromagna.cervia@gmail.com
               </a>
             </div>
           </div>
 
-          <!-- Redes Sociales -->
+          <!-- Social -->
           <div class="footer-section">
-            <div class="footer-title">{{ t.footer.social }}</div>
+            <div class="footer-title">{{ t('footer.social') }}</div>
             <div class="social-icons">
-              <Button
-                  icon="pi pi-facebook"
-                  rounded
-                  aria-label="Facebook"
-                  severity="warn"
-              />
-              <Button
-                  icon="pi pi-instagram"
-                  rounded
-                  aria-label="Instagram"
-                  severity="warn"
-              />
+              <a
+                href="https://www.facebook.com/barromagna"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                class="social-link"
+              >
+                <Button icon="pi pi-facebook" rounded severity="warn" aria-label="Facebook" />
+              </a>
+              <a
+                href="https://www.instagram.com/barromagna"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                class="social-link"
+              >
+                <Button icon="pi pi-instagram" rounded severity="warn" aria-label="Instagram" />
+              </a>
             </div>
           </div>
+
         </div>
       </div>
     </footer>
@@ -214,7 +252,7 @@ const goHome = () => {
 }
 
 // ============================================
-// HEADER - Sin límite hasta 4K
+// HEADER
 // ============================================
 .app-header {
   background: var(--p-surface-0);
@@ -240,7 +278,7 @@ const goHome = () => {
   }
 }
 
-// Mobile Header
+// Mobile
 .header-mobile {
   display: flex;
   align-items: center;
@@ -258,17 +296,15 @@ const goHome = () => {
   width: auto;
   cursor: pointer;
   transition: opacity 0.2s ease;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  &:hover { opacity: 0.8; }
 }
 
 .spacer {
   width: 40px;
+  flex-shrink: 0;
 }
 
-// Desktop Header
+// Desktop
 .header-desktop {
   display: none;
   height: 100%;
@@ -286,16 +322,83 @@ const goHome = () => {
   width: auto;
   cursor: pointer;
   transition: opacity 0.2s ease;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  &:hover { opacity: 0.8; }
 }
 
 .nav-desktop {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+// ============================================
+// LANGUAGE SWITCHER
+// ============================================
+.lang-switcher {
+  position: relative;
+}
+
+.lang-btn-current {
+  font-size: 1rem;
+  gap: 0.375rem;
+}
+
+.lang-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}
+
+.lang-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--p-surface-0);
+  border: 1px solid var(--p-surface-200);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  min-width: 160px;
+  overflow: hidden;
+  z-index: 200;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9375rem;
+  color: var(--p-text-color);
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--p-surface-100);
+  }
+
+  &.active {
+    background: var(--p-primary-50);
+    color: var(--p-primary-color);
+    font-weight: 600;
+  }
+}
+
+.lang-flag {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.lang-name {
+  font-size: 0.9375rem;
 }
 
 // ============================================
@@ -327,14 +430,8 @@ const goHome = () => {
   border-radius: 8px;
   transition: all 0.2s ease;
 
-  i {
-    font-size: 1.25rem;
-  }
-
-  span {
-    font-size: 1rem;
-    font-weight: 500;
-  }
+  i { font-size: 1.25rem; }
+  span { font-size: 1rem; font-weight: 500; }
 
   &:hover {
     background: var(--p-surface-100);
@@ -348,8 +445,64 @@ const goHome = () => {
   }
 }
 
+// Language section inside sidebar
+.sidebar-lang {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--p-surface-200);
+}
+
+.sidebar-lang-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--p-text-muted-color);
+  margin-bottom: 0.75rem;
+  padding: 0 0.25rem;
+
+  i { font-size: 0.875rem; }
+}
+
+.sidebar-lang-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar-lang-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s ease;
+  color: var(--p-text-color);
+
+  &:hover {
+    background: var(--p-surface-100);
+  }
+
+  &.active {
+    background: var(--p-primary-50);
+    color: var(--p-primary-color);
+    font-weight: 600;
+  }
+
+  .lang-flag { font-size: 1.375rem; line-height: 1; }
+  .lang-name { font-size: 0.9375rem; }
+}
+
 // ============================================
-// MAIN CONTENT - Sin límite hasta 4K
+// MAIN CONTENT
 // ============================================
 .app-main {
   flex: 1;
@@ -357,25 +510,21 @@ const goHome = () => {
 }
 
 .main-content {
-  padding: 1rem 0;
+  padding: 1rem;
 
   @media (min-width: 768px) {
-    padding: 2rem 0;
+    padding: 2rem;
   }
 }
 
 // ============================================
-// FOOTER - Sin límite hasta 4K
+// FOOTER
 // ============================================
 .app-footer {
   background: var(--p-primary-800);
   color: white;
   padding: 2.5rem 1rem;
-  margin-top: 3rem;
-
-  @media (min-width: 768px) {
-    margin-top: 4rem;
-  }
+  margin-top: 0;
 }
 
 .footer-content {
@@ -406,6 +555,10 @@ const goHome = () => {
 .footer-section {
   max-width: 350px;
 
+  &:last-child {
+    max-width: none;
+  }
+
   .footer-title {
     margin-bottom: 1rem;
     color: var(--p-orange-500);
@@ -413,16 +566,10 @@ const goHome = () => {
     font-size: 1.125rem;
     font-weight: normal;
     line-height: 1.3;
-  }
 
-  @media (min-width: 768px) {
-    .footer-title {
+    @media (min-width: 768px) {
       font-size: 1.25rem;
     }
-  }
-
-  &:last-child {
-    max-width: none;
   }
 }
 
@@ -480,5 +627,9 @@ const goHome = () => {
 .social-icons {
   display: flex;
   gap: 0.75rem;
+}
+
+.social-link {
+  text-decoration: none;
 }
 </style>
