@@ -133,6 +133,24 @@ const spotlightItems = [
 
 const activeMenuTab = ref<'caffetteria' | 'aperitivo' | 'alcolici'>('caffetteria')
 
+// ── Gallery photos — shuffled on each page load ──────────────
+const galleryPhotos = ref([
+  { src: '/food-photos/cappucchino-with-croissants.JPG',   alt: 'Cappuccino con croissant — Bar Romagna Cervia' },
+  { src: '/food-photos/cappucchino-with-croissants-2.JPG', alt: 'Cappuccino e cornetti — Bar Romagna Cervia' },
+  { src: '/food-photos/cappuccino-with-bombolone.JPG',     alt: 'Cappuccino con bombolone — Bar Romagna Cervia' },
+  { src: '/food-photos/coffee-heart.JPG',                  alt: 'Caffè latte art — Bar Romagna Cervia' },
+  { src: '/food-photos/coffee.JPG',                        alt: 'Caffè espresso — Bar Romagna Cervia' },
+  { src: '/food-photos/couple-breakfast.JPG',              alt: 'Colazione per due — Bar Romagna Cervia' },
+  { src: '/food-photos/croissants-plate.JPG',              alt: 'Piatto di cornetti — Bar Romagna Cervia' },
+  { src: '/food-photos/sandwiches.JPG',                    alt: 'Panini Bar Romagna Cervia' },
+  { src: '/food-photos/sandwiches-2.JPG',                  alt: 'Selezione panini — Bar Romagna Cervia' },
+  { src: '/food-photos/vitrina.JPG',                       alt: 'Vetrina Bar Romagna Cervia' },
+])
+
+onMounted(() => {
+  galleryPhotos.value = [...galleryPhotos.value].sort(() => Math.random() - 0.5)
+})
+
 const menuTabItems = computed(() => {
   if (activeMenuTab.value === 'caffetteria') {
     return [
@@ -362,18 +380,7 @@ const marqueeText = computed(() =>
       <div class="ga ga5">
         <h2 class="ga-title">{{ t('home.gallery.title') }}</h2>
         <div class="ga5-filmstrip">
-          <div v-for="({ src, alt }, idx) in [
-            { src: '/food-photos/cappucchino-with-croissants.JPG',   alt: 'Cappuccino con croissant — Bar Romagna Cervia' },
-            { src: '/food-photos/cappucchino-with-croissants-2.JPG', alt: 'Cappuccino e cornetti — Bar Romagna Cervia' },
-            { src: '/food-photos/cappuccino-with-bombolone.JPG',     alt: 'Cappuccino con bombolone — Bar Romagna Cervia' },
-            { src: '/food-photos/coffee-heart.JPG',                  alt: 'Caffè latte art — Bar Romagna Cervia' },
-            { src: '/food-photos/coffee.JPG',                        alt: 'Caffè espresso — Bar Romagna Cervia' },
-            { src: '/food-photos/couple-breakfast.JPG',              alt: 'Colazione per due — Bar Romagna Cervia' },
-            { src: '/food-photos/croissants-plate.JPG',              alt: 'Piatto di cornetti — Bar Romagna Cervia' },
-            { src: '/food-photos/sandwiches.JPG',                    alt: 'Panini Bar Romagna Cervia' },
-            { src: '/food-photos/sandwiches-2.JPG',                  alt: 'Selezione panini — Bar Romagna Cervia' },
-            { src: '/food-photos/vitrina.JPG',                       alt: 'Vetrina Bar Romagna Cervia' },
-          ]" :key="`film-${idx}`" class="ga5-frame">
+          <div v-for="({ src, alt }, idx) in galleryPhotos" :key="`film-${idx}`" class="ga5-frame">
             <img :src="src" :alt="alt" class="ga5-img" />
           </div>
         </div>

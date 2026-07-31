@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from '#imports'
 import { barSchedules } from '@/utils/schedule'
 import { useSchedule } from '@/composables/useSchedule'
 
@@ -308,8 +309,8 @@ const switchLocale = (code: string) => {
 }
 
 .logo-mobile {
-  height: 70%;
-  max-height: 52px;
+  height: 100%;
+  max-height: none;
   width: auto;
   min-width: 0;
   max-width: calc(100% - 96px);
@@ -317,11 +318,6 @@ const switchLocale = (code: string) => {
   transition: opacity 0.2s ease;
   object-fit: contain;
   &:hover { opacity: 0.8; }
-
-  @media (min-width: 768px) {
-    height: 100%;
-    max-height: none;
-  }
 }
 
 .spacer {
