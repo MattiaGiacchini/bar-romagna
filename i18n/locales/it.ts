@@ -1,73 +1,205 @@
-// app/i18n/locales/it.ts
+// i18n/locales/it.ts
 // Italian translations
 
 export default {
-    menu: {
-        categories: {
-            caffetteria: 'CAFFETTERIA',
-            bevande: 'BEVANDE',
-            alcolici: 'ALCOLICI'
-        },
-
-        sections: {
-            caffe: 'Caffè',
-            cappuccino: 'Cappuccino',
-            amaro: 'Amaro'
-        },
-
-        items: {
-            // Caffè
-            caffe_normale: 'normale',
-            caffe_deca: 'deca',
-            caffe_orzo: "d'orzo",
-            caffe_americano: 'americano',
-            caffe_corretto: 'corretto',
-            caffe_shakerato: 'shakerato',
-            caffe_shakerato_corretto: 'shakerato corretto',
-
-            // Cappuccino
-            cappuccino_normale: 'normale',
-            cappuccino_soia: 'di soia',
-            cappuccione: 'cappuccione',
-            cappuccino_vegetale: 'avena/mandorla/cocco',
-
-            // Altri caffè
-            mokaccino: 'Mokaccino',
-            nocciolino: 'Nocciolino',
-            ginseng: 'Ginseng',
-            cioccolata: 'Cioccolata in tazza',
-            te_tisane: 'Tè e tisane',
-            schiumina: 'Schiumina',
-
-            // Bevande
-            succo_frutta: 'Succo di frutta',
-            spremuta: 'Spremuta',
-            acqua_menta: 'Acqua e menta',
-            analcolico: 'Analcolico',
-            bicchiere_acqua: "Bicchiere d'acqua",
-
-            // Alcolici
-            birra_piccola: 'Birra piccola',
-            birra_media: 'Birra media',
-            prosecco_vino: 'Prosecco/vino calice',
-            spritz: 'Spritz',
-            tassoni_aperol: 'Tassoni aperol',
-            americano: 'Americano',
-            campari: 'Campari',
-            campari_prosecco: 'Campari e prosecco',
-            moscow_mule: 'Moscow mule',
-            gin_tonic: 'Gin tonic',
-            gin_tonic_premium: 'Gin tonic premium',
-            negroni: 'Negroni',
-            jack_daniel: 'Jack Daniel',
-            rum: 'Rum',
-            ponch_rum: 'Ponch rum arancia',
-            bombardino: 'Bombardino',
-            grappa: 'Grappa',
-            amaro: 'Amaro',
-            sturalavandini: 'Sturalavandini',
-            petrus: 'Petrus',
-            braulio: 'Braulio'
-        }
-    }
+  nav: {
+    home: 'Inizio',
+    contacts: 'Contatto',
+    menu: 'Menu',
+    events: 'Eventi',
+  },
+  footer: {
+    schedule: 'ORARIO',
+    contacts: 'CONTATTI',
+    social: 'SEGUICI',
+  },
+  schedule: {
+    closed: 'Chiuso',
+    days: {
+      monday: 'Lunedì',
+      tuesday: 'Martedì',
+      wednesday: 'Mercoledì',
+      thursday: 'Giovedì',
+      friday: 'Venerdì',
+      saturday: 'Sabato',
+      sunday: 'Domenica',
+    },
+  },
+  status: {
+    open: 'APERTO',
+    closed: 'CHIUSO',
+    closingSoon: 'CHIUDE TRA POCO',
+    openingSoon: 'APRE TRA POCO',
+  },
+  contacts: {
+    hero: {
+      title: 'Caffè al mattino,\nAperitivo al pomeriggio.',
+      subtitle: 'Il tuo bar di fiducia a Cervia per una colazione, un aperitivo o una serata tra amici.',
+    },
+    actions: {
+      call: 'Chiama',
+      directions: 'Come arrivare',
+      viewMenu: 'Vedi il menu',
+    },
+    schedule: {
+      title: 'Orario di Apertura',
+    },
+    contact: {
+      title: 'Contattaci',
+      email: 'EMAIL',
+      whatsapp: 'WhatsApp',
+    },
+    map: {
+      title: 'Dove trovarci',
+      address: 'Via Salara Statale, 35/M, Cervia (RA)',
+    },
+  },
+  home: {
+    hero: {
+      title: 'Il tuo bar\na Cervia.',
+      subtitle: 'Colazione al mattino, aperitivo al tramonto, serata con gli amici. Dal 2007, sempre qui per te.',
+    },
+    status: {
+      openUntil: 'Aperto fino alle',
+      closedUntil: 'Chiuso · riapre alle',
+      todayHours: 'Orario di oggi',
+    },
+    moments: {
+      title: 'Ogni momento ha il suo sapore',
+      colazione: 'Colazione',
+      colazioneDesc: 'Cappuccino e cornetto, il modo migliore per iniziare la giornata a Cervia.',
+      aperitivo: 'Aperitivo',
+      aperitivoDesc: 'Spritz, Negroni e stuzzichini. Il rito dell\'aperitivo romagnolo.',
+      serata: 'Serata',
+      serataDesc: 'Musica, giochi e buona compagnia. La serata parte dal Bar Romagna.',
+    },
+    menuPreview: {
+      title: 'Dal nostro menu',
+      subtitle: 'Qualcosa per ogni momento',
+      seeAll: 'Vedi il menu completo',
+      tabs: { caffetteria: 'Caffetteria', aperitivo: 'Aperitivo', alcolici: 'Alcolici' },
+    },
+    countdown: {
+      days: 'giorni', hours: 'ore', minutes: 'min', seconds: 'sec', until: 'al prossimo evento',
+    },
+    about: {
+      tag: 'La nostra storia',
+      title: 'Una famiglia,\nun bar.',
+      p1: 'Il Bar Romagna nasce a Cervia nel 2007 come punto di ritrovo del quartiere. Un bancone, qualche tavolino, e il profumo del caffè appena fatto.',
+      p2: 'Oggi lo gestiscono Nadia e Mattia con la stessa passione di sempre. La ricetta non è cambiata: caffè buono, prezzi onesti, e un sorriso ogni mattina.',
+      p3: 'Che tu venga per la colazione, per un aperitivo o solo per fare due chiacchiere, qui trovi sempre qualcuno che ti conosce per nome.',
+      quote: '"Un caffè qui vale più di mille parole. Siamo a Cervia dal 2007 — e non ci fermiamo."',
+      quoteAuthor: '— Nadia',
+      stats: {
+        yearsValue: '18+', yearsLabel: 'Anni di storia',
+        familyValue: 'Nadia & Mattia', familyLabel: 'Una famiglia',
+        cityValue: 'Cervia', cityLabel: 'La nostra città',
+      },
+      timeline: {
+        t1year: '2007', t1text: 'Il Bar Romagna apre le sue porte nel cuore di Cervia.',
+        t2year: "'10", t2text: 'Diventa il punto di ritrovo preferito del quartiere.',
+        t3year: "'15", t3text: 'Mattia affianca Nadia — la tradizione continua.',
+        t4year: 'Oggi', t4text: 'Ogni mattina dalle 5:00, sempre qui per te.',
+      },
+    },
+    nextEvent: {
+      tag: 'Prossimo evento',
+      cta: 'Vedi tutti gli eventi',
+      freeEntry: 'Ingresso libero',
+      at: 'alle',
+      noEventsTitle: 'Preparati per i prossimi eventi',
+      noEventsSubtitle: 'Niente in programma al momento, ma le sorprese non mancano mai. Intanto guarda cosa abbiamo fatto.',
+      noEventsCta: 'Guarda gli eventi passati',
+    },
+    gallery: {
+      title: 'Dalla nostra cucina e dal nostro bancone',
+    },
+    cta: {
+      title: 'Vieni a trovarci',
+      subtitle: 'Siamo in Via Salara Statale 35/M, Cervia. Ogni giorno dalle 5:00.',
+      menu: 'Vedi il menu',
+      directions: 'Come arrivare',
+    },
+  },
+  events: {
+    hero: {
+      title: 'Serate da\nRicordare.',
+      subtitle: 'Musica, giochi, degustazioni e tanto altro. Gli eventi del Bar Romagna per vivere Cervia insieme.',
+    },
+    sections: {
+      upcoming: 'Prossimi Eventi',
+      past: 'Eventi Passati',
+    },
+    filters: {
+      all: 'Tutti',
+      musica: 'Musica',
+      torneo: 'Torneo',
+    },
+    card: {
+      pastLabel: 'Passato',
+      freeEntry: 'Ingresso libero',
+      at: 'alle',
+    },
+    empty: {
+      upcoming: 'Nessun evento in programma al momento. Torna presto!',
+      past: 'Nessun evento passato da mostrare.',
+    },
+  },
+  menu: {
+    categories: {
+      caffetteria: 'CAFFETTERIA',
+      bevande: 'BEVANDE',
+      alcolici: 'ALCOLICI',
+    },
+    sections: {
+      caffe: 'Caffè',
+      cappuccino: 'Cappuccino',
+      amaro: 'Amaro',
+    },
+    items: {
+      caffe_normale: 'normale',
+      caffe_deca: 'deca',
+      caffe_orzo: "d'orzo",
+      caffe_americano: 'americano',
+      caffe_corretto: 'corretto',
+      caffe_shakerato: 'shakerato',
+      caffe_shakerato_corretto: 'shakerato corretto',
+      cappuccino_normale: 'normale',
+      cappuccino_soia: 'di soia',
+      cappuccione: 'cappuccione',
+      cappuccino_vegetale: 'avena/mandorla/cocco',
+      mokaccino: 'Mokaccino',
+      nocciolino: 'Nocciolino',
+      ginseng: 'Ginseng',
+      cioccolata: 'Cioccolata in tazza',
+      te_tisane: 'Tè e tisane',
+      schiumina: 'Schiumina',
+      succo_frutta: 'Succo di frutta',
+      spremuta: 'Spremuta',
+      acqua_menta: 'Acqua e menta',
+      analcolico: 'Analcolico',
+      bicchiere_acqua: "Bicchiere d'acqua",
+      birra_piccola: 'Birra piccola',
+      birra_media: 'Birra media',
+      prosecco_vino: 'Prosecco/vino calice',
+      spritz: 'Spritz',
+      tassoni_aperol: 'Tassoni aperol',
+      americano: 'Americano',
+      campari: 'Campari',
+      campari_prosecco: 'Campari e prosecco',
+      moscow_mule: 'Moscow mule',
+      gin_tonic: 'Gin tonic',
+      gin_tonic_premium: 'Gin tonic premium',
+      negroni: 'Negroni',
+      jack_daniel: 'Jack Daniel',
+      rum: 'Rum',
+      ponch_rum: 'Ponch rum arancia',
+      bombardino: 'Bombardino',
+      grappa: 'Grappa',
+      amaro: 'Amaro',
+      sturalavandini: 'Sturalavandini',
+      petrus: 'Petrus',
+      braulio: 'Braulio',
+    },
+  },
 }

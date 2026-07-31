@@ -2,16 +2,41 @@
 // Typography: all heading font families are set globally in assets/scss/theme.scss.
 // Do not override font-family anywhere in this file's scoped styles.
 
+// ── SEO ──────────────────────────────────────────────────────
+const { locale } = useI18n()
+
+const seoTitle = computed(() =>
+  locale.value === 'it'
+    ? 'Contatti — Bar Romagna Cervia | Orari, Mappa & Telefono'
+    : 'Contact — Bar Romagna Cervia | Opening Hours, Map & Phone'
+)
+const seoDesc = computed(() =>
+  locale.value === 'it'
+    ? 'Trova il Bar Romagna a Cervia: orari di apertura, indirizzo (Via Salara Statale 35/M), numero di telefono e mappa. Contatta Nadia o Mattia direttamente.'
+    : 'Find Bar Romagna in Cervia: opening hours, address (Via Salara Statale 35/M), phone number and map. Contact Nadia or Mattia directly.'
+)
+
+useSeoMeta({
+  title:              () => seoTitle.value,
+  description:        () => seoDesc.value,
+  ogTitle:            () => seoTitle.value,
+  ogDescription:      () => seoDesc.value,
+  ogUrl:              'https://www.barromagna.com/contacts',
+  ogImage:            'https://www.barromagna.com/bar-view.jpg',
+  ogImageAlt:         'Bar Romagna Cervia — contatti e orari',
+  twitterTitle:       () => seoTitle.value,
+  twitterDescription: () => seoDesc.value,
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: 'https://www.barromagna.com/contacts' }],
+})
+
 import { useSchedule } from '@/composables/useSchedule'
 import { barSchedules } from '@/utils/schedule'
 
 const { t } = useI18n()
 const { barStatus, displaySchedule } = useSchedule(barSchedules)
-const route = useRoute()
-
-const heroStyle = computed(() => (route.query.hero as string) ?? 'B')
-const panelStyle = computed(() => (route.query.panel as string) ?? 'A')
-const isDev = process.env.NODE_ENV !== 'production'
 
 const openMaps = () =>
   window.open(
@@ -30,68 +55,10 @@ const openWhatsAppMattia = () => window.open('https://wa.me/393473746945', '_bla
   <div class="page">
 
     <!-- ============================================================ -->
-    <!-- DEV STYLE SWITCHER (hidden in production)                    -->
-    <!-- ============================================================ -->
-    <div v-if="isDev" class="dev-switcher">
-      <span class="dev-label">HERO:</span>
-      <NuxtLink :to="{ query: { ...$route.query, hero: 'A' } }" :class="{ active: heroStyle === 'A' }">A</NuxtLink>
-      <NuxtLink :to="{ query: { ...$route.query, hero: 'B' } }" :class="{ active: heroStyle === 'B' }">B</NuxtLink>
-      <NuxtLink :to="{ query: { ...$route.query, hero: 'C' } }" :class="{ active: heroStyle === 'C' }">C</NuxtLink>
-      <span class="dev-sep">|</span>
-      <span class="dev-label">PANEL:</span>
-      <NuxtLink :to="{ query: { ...$route.query, panel: 'A' } }" :class="{ active: panelStyle === 'A' }">A</NuxtLink>
-      <NuxtLink :to="{ query: { ...$route.query, panel: 'B' } }" :class="{ active: panelStyle === 'B' }">B</NuxtLink>
-      <NuxtLink :to="{ query: { ...$route.query, panel: 'C' } }" :class="{ active: panelStyle === 'C' }">C</NuxtLink>
-    </div>
-
-
-    <!-- ============================================================ -->
-    <!-- HERO A — TRAMONTO                                            -->
-    <!-- Full-bleed photo, warm amber-to-blue gradient overlay        -->
-    <!-- ============================================================ -->
-    <section v-if="heroStyle === 'A'" class="hero-wrap">
-      <div class="hero hero-a">
-        <img src="/bar-view.jpg" alt="Bar Romagna" class="hero-img hero-a-img" />
-        <div class="hero-a-overlay">
-          <Tag
-            :value="barStatus.label"
-            icon="pi pi-circle-fill"
-            :severity="barStatus.severity"
-            class="hero-badge"
-          />
-          <div class="hero-body">
-            <h1 class="hero-a-title">
-              {{ t('contacts.hero.title').split('\n')[0] }}<br>
-              {{ t('contacts.hero.title').split('\n')[1] }}
-            </h1>
-            <p class="hero-sub">{{ t('contacts.hero.subtitle') }}</p>
-            <div class="hero-ctas">
-              <Button
-                :label="t('contacts.actions.viewMenu')"
-                icon="pi pi-book"
-                severity="warn"
-                size="large"
-                @click="() => navigateTo('/menu')"
-              />
-              <Button
-                :label="t('contacts.actions.directions')"
-                icon="pi pi-map-marker"
-                size="large"
-                class="hero-outline-btn"
-                @click="openMaps"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- ============================================================ -->
     <!-- HERO B — MANIFESTO                                           -->
     <!-- Split: deep blue editorial panel left, photo right          -->
     <!-- ============================================================ -->
-    <section v-else-if="heroStyle === 'B'" class="hero-wrap">
+    <section class="hero-wrap">
       <div class="hero hero-b">
         <!-- Left: editorial panel -->
         <div class="hero-b-panel">
@@ -135,47 +102,6 @@ const openWhatsAppMattia = () => window.open('https://wa.me/393473746945', '_bla
 
 
     <!-- ============================================================ -->
-    <!-- HERO C — INSEGNA                                             -->
-    <!-- Cream background, oversized shop-sign title, inset photo    -->
-    <!-- ============================================================ -->
-    <section v-else class="hero-wrap">
-      <div class="hero-c">
-        <div class="hero-c-text">
-          <Tag
-            :value="barStatus.label"
-            icon="pi pi-circle-fill"
-            :severity="barStatus.severity"
-            class="hero-badge hero-c-badge"
-          />
-          <p class="hero-c-eyebrow">dal 1982 · Cervia, Romagna</p>
-          <h1 class="hero-c-title">Bar<br>Romagna</h1>
-          <div class="hero-c-rule" />
-          <p class="hero-c-sub">{{ t('contacts.hero.subtitle') }}</p>
-          <div class="hero-ctas">
-            <Button
-              :label="t('contacts.actions.viewMenu')"
-              icon="pi pi-book"
-              severity="warn"
-              size="large"
-              @click="() => navigateTo('/menu')"
-            />
-            <Button
-              :label="t('contacts.actions.directions')"
-              icon="pi pi-map-marker"
-              severity="secondary"
-              size="large"
-              @click="openMaps"
-            />
-          </div>
-        </div>
-        <div class="hero-c-photo-wrap">
-          <img src="/bar-view.jpg" alt="Bar Romagna" class="hero-c-photo" />
-        </div>
-      </div>
-    </section>
-
-
-    <!-- ============================================================ -->
     <!-- MAIN CONTENT GRID                                            -->
     <!-- ============================================================ -->
     <section class="content-wrap">
@@ -185,7 +111,7 @@ const openWhatsAppMattia = () => window.open('https://wa.me/393473746945', '_bla
         <!-- PANEL A — TRATTORIA                                        -->
         <!-- Warm cream background, amber rule separators, bold Italian -->
         <!-- ========================================================= -->
-        <div v-if="panelStyle === 'A'" class="left-col panel-a-col">
+        <div class="left-col panel-a-col">
 
           <!-- Opening hours -->
           <div class="panel-a-section">
@@ -265,173 +191,10 @@ const openWhatsAppMattia = () => window.open('https://wa.me/393473746945', '_bla
 
 
         <!-- ========================================================= -->
-        <!-- PANEL B — MINIMAL ITALIAN                                  -->
-        <!-- White, typographic, numbered sections, left-border hover  -->
-        <!-- ========================================================= -->
-        <div v-else-if="panelStyle === 'B'" class="left-col panel-b-col">
-
-          <!-- Opening hours -->
-          <div class="panel-b-section">
-            <div class="panel-b-header">
-              <span class="panel-b-num">01</span>
-              <h2 class="panel-b-title">{{ t('contacts.schedule.title') }}</h2>
-              <Tag
-                :value="barStatus.label"
-                icon="pi pi-circle-fill"
-                :severity="barStatus.severity"
-                class="panel-b-tag"
-              />
-            </div>
-            <div class="schedule-list">
-              <div
-                v-for="(item, i) in displaySchedule"
-                :key="i"
-                class="schedule-row"
-                :class="{ 'is-closed': item.hours === t('schedule.closed') }"
-              >
-                <div class="schedule-day-wrap">
-                  <span class="schedule-day">{{ item.days }}</span>
-                  <Tag v-if="item.specialName" :value="item.specialName" severity="warn" class="special-tag" />
-                </div>
-                <span class="schedule-time">{{ item.hours }}</span>
-              </div>
-            </div>
-          </div>
-
-          <hr class="panel-b-hr" />
-
-          <!-- Contact info -->
-          <div class="panel-b-section">
-            <div class="panel-b-header">
-              <span class="panel-b-num">02</span>
-              <h2 class="panel-b-title">{{ t('contacts.contact.title') }}</h2>
-            </div>
-            <div class="contact-list">
-              <button class="contact-row-b" @click="sendEmail">
-                <i class="pi pi-envelope contact-icon-b" />
-                <div class="contact-text">
-                  <span class="contact-label">{{ t('contacts.contact.email') }}</span>
-                  <span class="contact-value">barromagna.cervia@gmail.com</span>
-                </div>
-              </button>
-              <button class="contact-row-b" @click="callNadia">
-                <i class="pi pi-phone contact-icon-b" />
-                <div class="contact-text">
-                  <span class="contact-label">Nadia</span>
-                  <span class="contact-value">+39 339 59 36 104</span>
-                </div>
-              </button>
-              <button class="contact-row-b" @click="callMattia">
-                <i class="pi pi-phone contact-icon-b" />
-                <div class="contact-text">
-                  <span class="contact-label">Mattia</span>
-                  <span class="contact-value">+39 347 37 46 945</span>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          <hr class="panel-b-hr" />
-
-          <!-- WhatsApp -->
-          <div class="panel-b-section">
-            <div class="panel-b-header">
-              <span class="panel-b-num">03</span>
-              <h2 class="panel-b-title">WhatsApp</h2>
-            </div>
-            <div class="whatsapp-btns">
-              <Button label="Nadia" icon="pi pi-whatsapp" severity="success" class="whatsapp-btn" @click="openWhatsAppNadia" />
-              <Button label="Mattia" icon="pi pi-whatsapp" severity="success" class="whatsapp-btn" @click="openWhatsAppMattia" />
-            </div>
-          </div>
-
-        </div>
-
-
-        <!-- ========================================================= -->
-        <!-- PANEL C — NEWSPAPER                                        -->
-        <!-- Warm tint, overline titles, two-column sub-grid at desktop -->
-        <!-- ========================================================= -->
-        <div v-else class="left-col panel-c-col">
-
-          <!-- Two-column sub-grid: schedule | contacts -->
-          <div class="panel-c-grid">
-
-            <!-- Schedule -->
-            <div class="panel-c-section">
-              <h2 class="panel-c-title">{{ t('contacts.schedule.title') }}</h2>
-              <div class="schedule-list">
-                <div
-                  v-for="(item, i) in displaySchedule"
-                  :key="i"
-                  class="schedule-row"
-                  :class="{ 'is-closed': item.hours === t('schedule.closed') }"
-                >
-                  <div class="schedule-day-wrap">
-                    <span class="schedule-day">{{ item.days }}</span>
-                    <Tag v-if="item.specialName" :value="item.specialName" severity="warn" class="special-tag" />
-                  </div>
-                  <span class="schedule-time">{{ item.hours }}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Contacts -->
-            <div class="panel-c-section">
-              <div class="panel-c-status-row">
-                <h2 class="panel-c-title">{{ t('contacts.contact.title') }}</h2>
-                <Tag
-                  :value="barStatus.label"
-                  icon="pi pi-circle-fill"
-                  :severity="barStatus.severity"
-                />
-              </div>
-              <div class="contact-list">
-                <button class="contact-row-c" @click="sendEmail">
-                  <i class="pi pi-envelope contact-icon-c" />
-                  <div class="contact-text">
-                    <span class="contact-label">{{ t('contacts.contact.email') }}</span>
-                    <span class="contact-value">barromagna.cervia@gmail.com</span>
-                  </div>
-                </button>
-                <button class="contact-row-c" @click="callNadia">
-                  <i class="pi pi-phone contact-icon-c" />
-                  <div class="contact-text">
-                    <span class="contact-label">Nadia</span>
-                    <span class="contact-value">+39 339 59 36 104</span>
-                  </div>
-                </button>
-                <button class="contact-row-c" @click="callMattia">
-                  <i class="pi pi-phone contact-icon-c" />
-                  <div class="contact-text">
-                    <span class="contact-label">Mattia</span>
-                    <span class="contact-value">+39 347 37 46 945</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-          <hr class="panel-c-hr" />
-
-          <!-- WhatsApp -->
-          <div class="panel-c-section panel-c-whatsapp">
-            <h2 class="panel-c-title">WhatsApp</h2>
-            <div class="whatsapp-btns">
-              <Button label="Nadia" icon="pi pi-whatsapp" severity="success" class="whatsapp-btn" @click="openWhatsAppNadia" />
-              <Button label="Mattia" icon="pi pi-whatsapp" severity="success" class="whatsapp-btn" @click="openWhatsAppMattia" />
-            </div>
-          </div>
-
-        </div>
-
-
-        <!-- ========================================================= -->
-        <!-- RIGHT COLUMN — MAP (shared across all panel variants)     -->
+        <!-- RIGHT COLUMN — MAP                                        -->
         <!-- ========================================================= -->
         <div class="right-col">
-          <div class="map-card">
+          <div id="map" class="map-card">
             <div class="map-embed">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14354.81212491558!2d12.269249098475342!3d44.25378708035667!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132cb1f33caaf7d7%3A0xef2fc4fe22e8018e!2sBar%20Romagna!5e0!3m2!1sit!2sit!4v1767721090967!5m2!1sit!2sit"
@@ -483,53 +246,12 @@ $r-sm:    10px;
   flex-direction: column;
 }
 
-// ── Dev switcher ─────────────────────────────────────────────
-.dev-switcher {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 9999;
-  background: var(--p-primary-900);
-  color: white;
-  padding: 0.5rem 0.875rem;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-
-  a {
-    color: rgba(255,255,255,0.55);
-    text-decoration: none;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    transition: background 0.15s;
-
-    &:hover { background: rgba(255,255,255,0.15); color: white; }
-    &.active { background: var(--p-orange-500); color: white; }
-  }
-}
-
-.dev-label { color: rgba(255,255,255,0.45); letter-spacing: 0.05em; }
-.dev-sep   { color: rgba(255,255,255,0.25); }
-
 // ── Hero shared ──────────────────────────────────────────────
 .hero-wrap {
-  // horizontal gutters handled by layout's .main-content
   padding: 0;
 }
 
 .hero-badge { align-self: flex-start; }
-
-.hero-sub {
-  margin: 0 0 1.75rem;
-  opacity: 0.92;
-  font-size: clamp(0.9375rem, 2vw, 1.0625rem);
-  line-height: 1.55;
-  max-width: 520px;
-}
 
 .hero-ctas {
   display: flex;
@@ -539,74 +261,16 @@ $r-sm:    10px;
 
 
 // ============================================================
-// HERO A — TRAMONTO
-// Full-bleed photo, warm amber-to-blue gradient
+// HERO B — MANIFESTO
+// Split screen: editorial blue panel left, photo right
 // ============================================================
 .hero {
   position: relative;
   width: 100%;
   border-radius: $r;
-  overflow: hidden; // hero-b overrides this via its own block
+  overflow: hidden;
 }
 
-.hero-a {
-  height: 480px;
-  @media (min-width: 768px)  { height: 540px; }
-  @media (min-width: 1280px) { height: 600px; }
-}
-
-.hero-a-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 35%;
-}
-
-.hero-a-overlay {
-  position: absolute;
-  inset: 0;
-  // warm amber midtone bleeds into the deep primary blue at the bottom
-  background: linear-gradient(
-    175deg,
-    rgba(0,0,0,0.08) 0%,
-    rgba(227, 120, 10, 0.45) 38%,
-    rgba(3, 88, 248, 0.82) 65%,
-    rgba(3, 88, 248, 0.96) 100%
-  );
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  @media (min-width: 768px)  { padding: 2.5rem; }
-  @media (min-width: 1280px) { padding: 3rem; }
-}
-
-.hero-body { color: white; max-width: 680px; }
-
-.hero-a-title {
-  // h1 — BigChunko comes from theme.scss, no font-family override here
-  margin: 0 0 0.875rem;
-  line-height: 1.05;
-  font-size: clamp(2.25rem, 6vw, 4rem);
-  color: white;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-}
-
-.hero-outline-btn {
-  --p-button-secondary-border-color: rgba(255,255,255,0.65);
-  --p-button-secondary-color: white;
-  --p-button-secondary-background: transparent;
-  --p-button-secondary-hover-background: rgba(255,255,255,0.15);
-  --p-button-secondary-hover-border-color: white;
-  --p-button-secondary-hover-color: white;
-}
-
-
-// ============================================================
-// HERO B — MANIFESTO
-// Split screen: editorial blue panel left, photo right
-// ============================================================
 .hero-b {
   display: flex;
   flex-direction: column;
@@ -630,7 +294,6 @@ $r-sm:    10px;
   flex-direction: column;
   justify-content: space-between;
   gap: 1.25rem;
-  // ensure panel never shrinks below its content on mobile
   flex-shrink: 0;
 
   @media (min-width: 768px) {
@@ -646,7 +309,7 @@ $r-sm:    10px;
 
 .hero-b-photo {
   width: 100%;
-  height: 260px; // visible photo strip on mobile
+  height: 260px;
   flex-shrink: 0;
 
   @media (min-width: 768px) {
@@ -665,17 +328,7 @@ $r-sm:    10px;
 
 .hero-b-content { display: flex; flex-direction: column; gap: 0; }
 
-.hero-b-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--p-orange-400);
-  margin-bottom: 0.875rem;
-}
-
 .hero-b-title {
-  // h1 — BigChunko from theme.scss
   margin: 0 0 1rem;
   line-height: 1.0;
   font-size: clamp(1.75rem, 5.5vw, 3.5rem);
@@ -708,103 +361,9 @@ $r-sm:    10px;
 
 
 // ============================================================
-// HERO C — INSEGNA
-// Cream background, oversized shop-sign title, portrait photo
-// ============================================================
-.hero-c {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 2.5rem $px;
-  background: var(--p-surface-500);
-  border-radius: $r;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-    align-items: center;
-    padding: 3rem $px-md;
-    gap: 4rem;
-  }
-}
-
-.hero-c-text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.hero-c-badge { margin-bottom: 1.25rem; }
-
-.hero-c-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--p-primary-color);
-  margin-bottom: 0.5rem;
-  opacity: 0.7;
-}
-
-.hero-c-title {
-  // h1 — BigChunko from theme.scss
-  margin: 0 0 0.5rem;
-  line-height: 0.95;
-  font-size: clamp(4rem, 12vw, 8rem);
-  color: var(--p-primary-800);
-  letter-spacing: -0.02em;
-}
-
-.hero-c-rule {
-  width: 72px;
-  height: 4px;
-  background: var(--p-orange-500);
-  border-radius: 2px;
-  margin: 0.75rem 0 1.5rem;
-}
-
-.hero-c-sub {
-  font-size: 1rem;
-  line-height: 1.65;
-  color: var(--p-text-color);
-  max-width: 440px;
-  margin-bottom: 2rem;
-}
-
-.hero-c-photo-wrap {
-  width: 100%;
-  max-height: 340px;
-  border-radius: $r;
-  overflow: hidden;
-  box-shadow: 0 12px 40px rgba(3, 88, 248, 0.18);
-
-  @media (min-width: 768px) {
-    width: 340px;
-    flex-shrink: 0;
-    max-height: none;
-    height: 420px;
-  }
-
-  @media (min-width: 1280px) {
-    width: 400px;
-    height: 480px;
-  }
-}
-
-.hero-c-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 30%;
-}
-
-
-// ============================================================
 // CONTENT GRID (shared)
 // ============================================================
 .content-wrap {
-  // vertical spacing between hero and content grid
-  // layout's .main-content already provides 2rem top/bottom
-  // we only need the gap between the hero section and this section
   margin-top: $gap;
   @media (min-width: 768px) { margin-top: $gap-lg; }
 }
@@ -826,7 +385,6 @@ $r-sm:    10px;
   }
 }
 
-// Shared left-col base
 .left-col {
   border-radius: $r;
   padding: 1.75rem;
@@ -851,8 +409,6 @@ $r-sm:    10px;
   padding: 0.375rem 0.5rem;
   border-radius: $r-sm;
   transition: background 0.1s ease;
-
-
 
   &.is-closed {
     .schedule-day  { color: var(--p-text-muted-color); }
@@ -926,7 +482,6 @@ $r-sm:    10px;
 }
 
 .panel-a-title {
-  // h2 — BigChunko from theme.scss, no override needed
   margin: 0;
   color: var(--p-primary-color);
 }
@@ -939,7 +494,6 @@ $r-sm:    10px;
   border-radius: 1px;
 }
 
-// Contact rows — icon inline, no background circle
 .contact-row-a {
   display: flex;
   align-items: center;
@@ -961,156 +515,6 @@ $r-sm:    10px;
   color: var(--p-primary-color);
   flex-shrink: 0;
   width: 20px;
-  text-align: center;
-}
-
-// ============================================================
-// PANEL B — MINIMAL ITALIAN
-// White, typographic, numbered, left-border hover accent
-// ============================================================
-.panel-b-col {
-  background: var(--p-surface-0);
-  border: 1px solid var(--p-surface-200);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-}
-
-.panel-b-section { display: flex; flex-direction: column; }
-
-.panel-b-header {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  margin-bottom: 1.125rem;
-}
-
-.panel-b-num {
-  font-size: 0.75rem;
-  font-weight: 900;
-  color: var(--p-orange-500);
-  letter-spacing: 0.06em;
-  flex-shrink: 0;
-  line-height: 1;
-  padding-top: 0.2rem;
-}
-
-.panel-b-title {
-  // h2 — BigChunko from theme.scss
-  margin: 0;
-  color: var(--p-text-color);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.panel-b-tag { margin-left: auto; }
-
-.panel-b-hr {
-  border: none;
-  border-top: 1px solid var(--p-surface-200);
-  margin: 1.5rem 0;
-}
-
-// Contact rows — left border slides in on hover
-.contact-row-b {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 0.625rem 0.625rem 0.625rem 0.75rem;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  border-left: 3px solid transparent;
-  transition: border-color 0.18s ease, padding-left 0.18s ease;
-
-  &:hover {
-    border-left-color: var(--p-primary-color);
-    padding-left: 1.125rem;
-  }
-}
-
-.contact-icon-b {
-  font-size: 1.0625rem;
-  color: var(--p-primary-color);
-  flex-shrink: 0;
-  width: 20px;
-  text-align: center;
-}
-
-
-// ============================================================
-// PANEL C — NEWSPAPER
-// Warm tint, overline h2 titles, two-column sub-grid
-// ============================================================
-.panel-c-col {
-  background: var(--p-surface-100);
-  border: 1px solid var(--p-surface-300);
-  gap: 0;
-}
-
-.panel-c-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-
-  @media (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-}
-
-.panel-c-section { display: flex; flex-direction: column; }
-
-.panel-c-status-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.panel-c-title {
-  // h2 — BigChunko from theme.scss
-  margin: 0 0 1rem;
-  color: var(--p-primary-color);
-  border-top: 3px solid var(--p-primary-color);
-  padding-top: 0.625rem;
-  font-variant: small-caps;
-}
-
-.panel-c-status-row .panel-c-title { margin-bottom: 0; }
-
-.panel-c-hr {
-  border: none;
-  border-top: 1px solid var(--p-surface-300);
-  margin: 1.5rem 0;
-}
-
-.panel-c-whatsapp { padding-top: 0; }
-
-// Contact rows — minimal, editorial
-.contact-row-c {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  border-bottom: 1px solid var(--p-surface-300);
-  transition: background 0.15s ease;
-
-  &:last-child { border-bottom: none; }
-
-  &:hover { background: var(--p-surface-200); margin: 0 -0.375rem; padding-left: 0.375rem; padding-right: 0.375rem; }
-}
-
-.contact-icon-c {
-  font-size: 1rem;
-  color: var(--p-orange-500);
-  flex-shrink: 0;
-  width: 18px;
   text-align: center;
 }
 

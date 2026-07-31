@@ -1,73 +1,205 @@
-// app/i18n/locales/en.ts
+// i18n/locales/en.ts
 // English translations
 
 export default {
-    menu: {
-        categories: {
-            caffetteria: 'COFFEE BAR',
-            bevande: 'DRINKS',
-            alcolici: 'ALCOHOLIC DRINKS'
-        },
-
-        sections: {
-            caffe: 'Coffee',
-            cappuccino: 'Cappuccino',
-            amaro: 'Amaro'
-        },
-
-        items: {
-            // Coffee
-            caffe_normale: 'regular',
-            caffe_deca: 'decaf',
-            caffe_orzo: 'barley coffee',
-            caffe_americano: 'americano',
-            caffe_corretto: 'coffee with liquor',
-            caffe_shakerato: 'iced shaken coffee',
-            caffe_shakerato_corretto: 'iced shaken coffee with liquor',
-
-            // Cappuccino
-            cappuccino_normale: 'regular',
-            cappuccino_soia: 'soy milk',
-            cappuccione: 'large cappuccino',
-            cappuccino_vegetale: 'oat/almond/coconut milk',
-
-            // Other coffees
-            mokaccino: 'Mokaccino',
-            nocciolino: 'Nocciolino',
-            ginseng: 'Ginseng',
-            cioccolata: 'Hot chocolate',
-            te_tisane: 'Tea and herbal infusions',
-            schiumina: 'Milk foam',
-
-            // Drinks
-            succo_frutta: 'Fruit juice',
-            spremuta: 'Freshly squeezed juice',
-            acqua_menta: 'Water and mint syrup',
-            analcolico: 'Non alcoholic drink',
-            bicchiere_acqua: 'Glass of water',
-
-            // Alcoholic drinks
-            birra_piccola: 'Small beer',
-            birra_media: 'Medium beer',
-            prosecco_vino: 'Prosecco or wine glass',
-            spritz: 'Spritz',
-            tassoni_aperol: 'Tassoni Aperol',
-            americano: 'Americano',
-            campari: 'Campari',
-            campari_prosecco: 'Campari and prosecco',
-            moscow_mule: 'Moscow mule',
-            gin_tonic: 'Gin and tonic',
-            gin_tonic_premium: 'Premium gin and tonic',
-            negroni: 'Negroni',
-            jack_daniel: 'Jack Daniel’s',
-            rum: 'Rum',
-            ponch_rum: 'Ponch rum arancia',
-            bombardino: 'Bombardino',
-            grappa: 'Grappa',
-            amaro: 'Amaro',
-            sturalavandini: 'Sturalavandini',
-            petrus: 'Petrus',
-            braulio: 'Braulio'
-        }
-    }
+  nav: {
+    home: 'Home',
+    contacts: 'Contact',
+    menu: 'Menu',
+    events: 'Events',
+  },
+  footer: {
+    schedule: 'HOURS',
+    contacts: 'CONTACTS',
+    social: 'FOLLOW US',
+  },
+  schedule: {
+    closed: 'Closed',
+    days: {
+      monday: 'Monday',
+      tuesday: 'Tuesday',
+      wednesday: 'Wednesday',
+      thursday: 'Thursday',
+      friday: 'Friday',
+      saturday: 'Saturday',
+      sunday: 'Sunday',
+    },
+  },
+  status: {
+    open: 'OPEN NOW',
+    closed: 'CLOSED',
+    closingSoon: 'CLOSING SOON',
+    openingSoon: 'OPENING SOON',
+  },
+  contacts: {
+    hero: {
+      title: 'Coffee in the morning,\nAperitivo in the afternoon.',
+      subtitle: 'Your go-to bar in Cervia for breakfast, aperitivo or an evening with friends.',
+    },
+    actions: {
+      call: 'Call',
+      directions: 'Get directions',
+      viewMenu: 'View the menu',
+    },
+    schedule: {
+      title: 'Opening Hours',
+    },
+    contact: {
+      title: 'Get in touch',
+      email: 'EMAIL',
+      whatsapp: 'WhatsApp',
+    },
+    map: {
+      title: 'How to find us',
+      address: 'Via Salara Statale, 35/M, Cervia (RA)',
+    },
+  },
+  home: {
+    hero: {
+      title: 'Your bar\nin Cervia.',
+      subtitle: 'Coffee in the morning, aperitivo at sunset, evenings with friends. Here since 2007.',
+    },
+    status: {
+      openUntil: 'Open until',
+      closedUntil: 'Closed · reopens at',
+      todayHours: 'Today\'s hours',
+    },
+    moments: {
+      title: 'Every moment has its flavour',
+      colazione: 'Breakfast',
+      colazioneDesc: 'Cappuccino and cornetto — the best way to start the day in Cervia.',
+      aperitivo: 'Aperitivo',
+      aperitivoDesc: 'Spritz, Negroni and snacks. The Romagnolo aperitivo ritual.',
+      serata: 'Evening',
+      serataDesc: 'Music, games and good company. The evening starts at Bar Romagna.',
+    },
+    about: {
+      tag: 'Our story',
+      title: 'One family,\none bar.',
+      p1: 'Bar Romagna was born in Cervia in 2007 as the neighbourhood gathering spot. A counter, a few tables, and the smell of fresh coffee.',
+      p2: 'Today it\'s run by Nadia and Mattia with the same passion as always. The recipe hasn\'t changed: good coffee, honest prices, and a smile every morning.',
+      p3: 'Whether you come for breakfast, an aperitivo, or just a chat, you\'ll always find someone here who knows your name.',
+      quote: '"A coffee here is worth a thousand words. We\'ve been in Cervia since 2007 — and we\'re not stopping."',
+      quoteAuthor: '— Nadia',
+      stats: {
+        yearsValue: '18+', yearsLabel: 'Years of history',
+        familyValue: 'Nadia & Mattia', familyLabel: 'One family',
+        cityValue: 'Cervia', cityLabel: 'Our city',
+      },
+      timeline: {
+        t1year: '2007', t1text: 'Bar Romagna opens its doors in the heart of Cervia.',
+        t2year: "'10s", t2text: 'Becomes the neighbourhood\'s favourite meeting point.',
+        t3year: "'15s", t3text: 'Mattia joins Nadia — the family tradition continues.',
+        t4year: 'Today', t4text: 'Every morning from 5:00, always here for you.',
+      },
+    },
+    menuPreview: {
+      title: 'From our menu',
+      subtitle: 'Something for every moment',
+      seeAll: 'View full menu',
+      tabs: { caffetteria: 'Coffee bar', aperitivo: 'Aperitivo', alcolici: 'Drinks' },
+    },
+    countdown: {
+      days: 'days', hours: 'hrs', minutes: 'min', seconds: 'sec', until: 'to the next event',
+    },
+    nextEvent: {
+      tag: 'Next event',
+      cta: 'See all events',
+      freeEntry: 'Free entry',
+      at: 'at',
+      noEventsTitle: 'Get ready for upcoming events',
+      noEventsSubtitle: 'Nothing scheduled right now, but surprises are never far away. Take a look at what we\'ve done.',
+      noEventsCta: 'See past events',
+    },
+    gallery: {
+      title: 'From our kitchen and our counter',
+    },
+    cta: {
+      title: 'Come and find us',
+      subtitle: 'We\'re at Via Salara Statale 35/M, Cervia. Every day from 5:00.',
+      menu: 'View the menu',
+      directions: 'Get directions',
+    },
+  },
+  events: {
+    hero: {
+      title: 'Evenings to\nRemember.',
+      subtitle: 'Music, games, tastings and more. Bar Romagna events to experience Cervia together.',
+    },
+    sections: {
+      upcoming: 'Upcoming Events',
+      past: 'Past Events',
+    },
+    filters: {
+      all: 'All',
+      musica: 'Music',
+      torneo: 'Tournament',
+    },
+    card: {
+      pastLabel: 'Past',
+      freeEntry: 'Free entry',
+      at: 'at',
+    },
+    empty: {
+      upcoming: 'No events scheduled at the moment. Check back soon!',
+      past: 'No past events to show.',
+    },
+  },
+  menu: {
+    categories: {
+      caffetteria: 'COFFEE BAR',
+      bevande: 'DRINKS',
+      alcolici: 'ALCOHOLIC DRINKS',
+    },
+    sections: {
+      caffe: 'Coffee',
+      cappuccino: 'Cappuccino',
+      amaro: 'Amaro',
+    },
+    items: {
+      caffe_normale: 'regular',
+      caffe_deca: 'decaf',
+      caffe_orzo: 'barley coffee',
+      caffe_americano: 'americano',
+      caffe_corretto: 'coffee with liquor',
+      caffe_shakerato: 'iced shaken coffee',
+      caffe_shakerato_corretto: 'iced shaken coffee with liquor',
+      cappuccino_normale: 'regular',
+      cappuccino_soia: 'soy milk',
+      cappuccione: 'large cappuccino',
+      cappuccino_vegetale: 'oat/almond/coconut milk',
+      mokaccino: 'Mokaccino',
+      nocciolino: 'Nocciolino',
+      ginseng: 'Ginseng',
+      cioccolata: 'Hot chocolate',
+      te_tisane: 'Tea and herbal infusions',
+      schiumina: 'Milk foam',
+      succo_frutta: 'Fruit juice',
+      spremuta: 'Freshly squeezed juice',
+      acqua_menta: 'Water and mint syrup',
+      analcolico: 'Non-alcoholic drink',
+      bicchiere_acqua: 'Glass of water',
+      birra_piccola: 'Small beer',
+      birra_media: 'Medium beer',
+      prosecco_vino: 'Prosecco or wine glass',
+      spritz: 'Spritz',
+      tassoni_aperol: 'Tassoni Aperol',
+      americano: 'Americano',
+      campari: 'Campari',
+      campari_prosecco: 'Campari and prosecco',
+      moscow_mule: 'Moscow mule',
+      gin_tonic: 'Gin and tonic',
+      gin_tonic_premium: 'Premium gin and tonic',
+      negroni: 'Negroni',
+      jack_daniel: "Jack Daniel's",
+      rum: 'Rum',
+      ponch_rum: 'Ponch rum arancia',
+      bombardino: 'Bombardino',
+      grappa: 'Grappa',
+      amaro: 'Amaro',
+      sturalavandini: 'Sturalavandini',
+      petrus: 'Petrus',
+      braulio: 'Braulio',
+    },
+  },
 }

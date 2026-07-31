@@ -8,6 +8,7 @@ const { displaySchedule } = useSchedule(barSchedules)
 
 const navItems = computed(() => [
   { label: t('nav.home'), icon: 'pi pi-home', route: '/' },
+  { label: t('nav.events'), icon: 'pi pi-calendar', route: '/events' },
   { label: t('nav.contacts'), icon: 'pi pi-phone', route: '/contacts' },
   { label: t('nav.menu'), icon: 'pi pi-book', route: '/menu' },
 ])
@@ -18,6 +19,17 @@ const langMenuVisible = ref(false)
 const toggleMobileMenu = () => { mobileMenuVisible.value = !mobileMenuVisible.value }
 const closeMobileMenu = () => { mobileMenuVisible.value = false }
 const goHome = () => navigateTo('/')
+
+// Maps locale code -> ISO 3166-1 alpha-2 country code for flag-icons
+const countryCodeMap: Record<string, string> = {
+  it: 'it',
+  en: 'gb',
+  es: 'es',
+  de: 'de',
+  fr: 'fr',
+}
+
+const getCountryCode = (code: string) => countryCodeMap[code] ?? code
 
 const currentLocale = computed(() =>
   locales.value.find((l: { code: string }) => l.code === locale.value)
@@ -45,6 +57,7 @@ const switchLocale = (code: string) => {
             text
             rounded
             severity="primary"
+            class="menu-toggle-btn"
             @click="toggleMobileMenu"
             aria-label="Menu"
           />
@@ -77,14 +90,13 @@ const switchLocale = (code: string) => {
             />
             <!-- Language switcher desktop -->
             <div class="lang-switcher">
-              <Button
-                :label="`${currentLocale?.flag} ${currentLocale?.name}`"
-                icon="pi pi-chevron-down"
-                iconPos="right"
-                text
+              <button
                 class="lang-btn-current"
                 @click="langMenuVisible = !langMenuVisible"
-              />
+              >
+                <span :class="`fi fi-${getCountryCode(currentLocale?.code ?? '')} fi-lg`" class="lang-flag-icon" />
+                <i class="pi pi-chevron-down lang-chevron" />
+              </button>
               <div v-if="langMenuVisible" class="lang-dropdown">
                 <button
                   v-for="loc in locales"
@@ -93,7 +105,7 @@ const switchLocale = (code: string) => {
                   :class="{ active: loc.code === locale }"
                   @click="switchLocale(loc.code)"
                 >
-                  <span class="lang-flag">{{ loc.flag }}</span>
+                  <span :class="`fi fi-${getCountryCode(loc.code)} fi-lg`" class="lang-flag-icon" />
                   <span class="lang-name">{{ loc.name }}</span>
                 </button>
               </div>
@@ -147,7 +159,7 @@ const switchLocale = (code: string) => {
             :class="{ active: loc.code === locale }"
             @click="switchLocale(loc.code); closeMobileMenu()"
           >
-            <span class="lang-flag">{{ loc.flag }}</span>
+            <span :class="`fi fi-${getCountryCode(loc.code)} fi-lg`" class="lang-flag-icon" />
             <span class="lang-name">{{ loc.name }}</span>
           </button>
         </div>
@@ -284,19 +296,32 @@ const switchLocale = (code: string) => {
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  gap: 1rem;
+  gap: 0.5rem;
 
   @media (min-width: 1024px) {
     display: none;
   }
 }
 
+.menu-toggle-btn {
+  flex-shrink: 0;
+}
+
 .logo-mobile {
-  height: 100%;
+  height: 70%;
+  max-height: 52px;
   width: auto;
+  min-width: 0;
+  max-width: calc(100% - 96px);
   cursor: pointer;
   transition: opacity 0.2s ease;
+  object-fit: contain;
   &:hover { opacity: 0.8; }
+
+  @media (min-width: 768px) {
+    height: 100%;
+    max-height: none;
+  }
 }
 
 .spacer {
@@ -339,8 +364,27 @@ const switchLocale = (code: string) => {
 }
 
 .lang-btn-current {
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
   gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  color: var(--p-primary-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--p-primary-50);
+  }
+}
+
+.lang-chevron {
+  font-size: 0.7rem;
+  opacity: 0.7;
 }
 
 .lang-overlay {
@@ -392,9 +436,15 @@ const switchLocale = (code: string) => {
   }
 }
 
-.lang-flag {
-  font-size: 1.25rem;
-  line-height: 1;
+.lang-flag-icon {
+  display: inline-block;
+  width: 1.33em;
+  height: 1em;
+  border-radius: 2px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  background-size: cover;
+  background-position: center;
 }
 
 .lang-name {
@@ -497,7 +547,7 @@ const switchLocale = (code: string) => {
     font-weight: 600;
   }
 
-  .lang-flag { font-size: 1.375rem; line-height: 1; }
+  .lang-flag-icon { display: inline-block; width: 1.33em; height: 1em; background-size: cover; background-position: center; }
   .lang-name { font-size: 0.9375rem; }
 }
 

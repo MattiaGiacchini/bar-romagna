@@ -1,6 +1,36 @@
 <script setup lang="ts">
 import { menuData } from '@/utils/menu'
 
+// ── SEO ──────────────────────────────────────────────────────
+const { locale } = useI18n()
+
+const seoTitle = computed(() =>
+  locale.value === 'it'
+    ? 'Menu — Bar Romagna Cervia | Caffetteria, Aperitivo & Cocktail'
+    : 'Menu — Bar Romagna Cervia | Coffee, Aperitivo & Cocktails'
+)
+const seoDesc = computed(() =>
+  locale.value === 'it'
+    ? 'Scopri il menu completo del Bar Romagna di Cervia: caffetteria, colazione, aperitivo con Spritz e Negroni, cocktail e bevande. Prezzi onesti, qualità artigianale.'
+    : 'Explore the full menu of Bar Romagna in Cervia: coffee bar, breakfast, aperitivo with Spritz and Negroni, cocktails and drinks. Honest prices, artisan quality.'
+)
+
+useSeoMeta({
+  title:              () => seoTitle.value,
+  description:        () => seoDesc.value,
+  ogTitle:            () => seoTitle.value,
+  ogDescription:      () => seoDesc.value,
+  ogUrl:              'https://www.barromagna.com/menu',
+  ogImage:            'https://www.barromagna.com/bar-view.jpg',
+  ogImageAlt:         'Bar Romagna Cervia — menu caffetteria e aperitivo',
+  twitterTitle:       () => seoTitle.value,
+  twitterDescription: () => seoDesc.value,
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: 'https://www.barromagna.com/menu' }],
+})
+
 // Using nuxt-i18n or vue-i18n
 const { t } = useI18n()
 </script>
