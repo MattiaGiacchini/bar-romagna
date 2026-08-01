@@ -81,16 +81,17 @@ export default defineNuxtConfig({
   // ── Sitemap ──────────────────────────────────────────────────
   sitemap: {
     siteUrl: SITE_URL,
-    // All static routes — no dynamic content to crawl
+    // Static core routes
     urls: [
       { loc: '/',         priority: 1.0, changefreq: 'weekly'  },
       { loc: '/menu',     priority: 0.9, changefreq: 'monthly' },
       { loc: '/events',   priority: 0.8, changefreq: 'weekly'  },
       { loc: '/contacts', priority: 0.7, changefreq: 'monthly' },
     ],
-    // Generate hreflang alternate links for every locale
-    // Since strategy is 'no_prefix', Italian has no prefix and all others are the same URL
-    // — we still declare x-default and it-IT as canonical
+    // Dynamic source: one URL per event (see server/api/__sitemap__/urls.ts)
+    sources: [
+      '/api/__sitemap__/urls',
+    ],
     xsl: false,
   },
 

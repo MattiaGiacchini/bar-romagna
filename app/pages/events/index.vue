@@ -37,10 +37,16 @@ import { pastEvents, upcomingEvents } from '@/utils/events'
 import type { EventCategory } from '@/utils/events'
 
 const { t } = useI18n()
+const analytics = useAnalytics()
 
 type FilterValue = EventCategory | 'all'
 
 const activeFilter = ref<FilterValue>('all')
+
+const setFilter = (value: FilterValue) => {
+  activeFilter.value = value
+  analytics.trackEventsFilter(value)
+}
 
 const filters: { value: FilterValue; labelKey: string }[] = [
   { value: 'all',    labelKey: 'events.filters.all' },
@@ -107,7 +113,7 @@ const formatDate = (iso: string): string => {
           :key="f.value"
           class="filter-btn"
           :class="{ active: activeFilter === f.value }"
-          @click="activeFilter = f.value"
+          @click="setFilter(f.value)"
         >
           {{ t(f.labelKey) }}
         </button>
@@ -120,7 +126,7 @@ const formatDate = (iso: string): string => {
     <section v-if="filteredUpcoming.length > 0" class="events-section">
       <h2 class="section-title section-title--upcoming">{{ t('events.sections.upcoming') }}</h2>
       <div class="events-grid">
-        <article v-for="event in filteredUpcoming" :key="event.id" class="event-card">
+        <NuxtLink v-for="event in filteredUpcoming" :key="event.id" :to="`/events/${event.slug}`" class="event-card" @click="analytics.trackEventCardClick(event, 'events_list')">
           <div class="card-photo-wrap">
             <img :src="event.image" :alt="event.title" class="card-photo" />
             <span class="card-badge card-badge--cat" :class="`card-cat--${event.category}`">
@@ -158,7 +164,7 @@ const formatDate = (iso: string): string => {
             </div>
             <p class="card-desc">{{ event.description }}</p>
           </div>
-        </article>
+        </NuxtLink>
       </div>
     </section>
 
@@ -169,7 +175,7 @@ const formatDate = (iso: string): string => {
       <h2 class="section-title section-title--past">{{ t('events.sections.past') }}</h2>
 
       <div v-if="filteredPast.length > 0" class="events-grid">
-        <article v-for="event in filteredPast" :key="event.id" class="event-card event-card--past">
+        <NuxtLink v-for="event in filteredPast" :key="event.id" :to="`/events/${event.slug}`" class="event-card event-card--past" @click="analytics.trackEventCardClick(event, 'events_list')">
           <div class="card-photo-wrap">
             <img :src="event.image" :alt="event.title" class="card-photo card-photo--past" />
             <span class="card-badge card-badge--cat" :class="`card-cat--${event.category}`">
@@ -207,7 +213,7 @@ const formatDate = (iso: string): string => {
             </div>
             <p class="card-desc">{{ event.description }}</p>
           </div>
-        </article>
+        </NuxtLink>
       </div>
 
       <div v-else class="empty-state">
@@ -399,6 +405,8 @@ $r-sm: 10px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: inherit;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 
   &:hover {

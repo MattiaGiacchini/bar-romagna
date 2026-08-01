@@ -7,6 +7,7 @@ import { useReveal, useRevealList } from '@/composables/useReveal'
 import { barSchedules } from '@/utils/schedule'
 import { upcomingEvents } from '@/utils/events'
 import { menuData } from '@/utils/menu'
+import { buildLocalBusinessJsonLd } from '@/utils/business'
 
 // ── SEO ──────────────────────────────────────────────────────
 const { locale, t } = useI18n()
@@ -38,47 +39,18 @@ useHead({
   link: [{ rel: 'canonical', href: 'https://www.barromagna.com' }],
   script: [{
     type: 'application/ld+json',
-    innerHTML: JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'BarOrPub',
-      name: 'Bar Romagna',
-      url: 'https://www.barromagna.com',
-      logo: 'https://www.barromagna.com/logo-barromagna.svg',
-      image: 'https://www.barromagna.com/bar-view.jpg',
-      description: 'Bar storico di Cervia dal 2007. Colazione, aperitivo, serate. Gestito da Nadia e Mattia.',
-      telephone: '+393395936104',
-      email: 'barromagna.cervia@gmail.com',
-      foundingDate: '2007',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Via Salara Statale, 35/M',
-        addressLocality: 'Cervia',
-        addressRegion: 'RA',
-        postalCode: '48015',
-        addressCountry: 'IT',
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: 44.2562331,
-        longitude: 12.2766308,
-      },
-      hasMap: 'https://maps.app.goo.gl/N1Bbdvc4ty9JZ2k27',
-      openingHoursSpecification: [
-        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '06:30', closes: '22:00' },
-        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday','Sunday'], opens: '06:30', closes: '23:00' },
-      ],
-      servesCuisine: ['Caffetteria', 'Aperitivo', 'Cocktail'],
-      priceRange: '€',
-      sameAs: [
-        'https://www.facebook.com/p/Bar-Romagna-100094631556500/',
-        'https://maps.app.goo.gl/N1Bbdvc4ty9JZ2k27',
-      ],
-    }),
+    innerHTML: JSON.stringify(buildLocalBusinessJsonLd()),
   }],
 })
 
 const route = useRoute()
 const { barStatus, displaySchedule } = useSchedule(barSchedules)
+const analytics = useAnalytics()
+
+// ── CTA handlers (tracked) ────────────────────────────────────
+const goToMenu = (location: string) => { analytics.trackCta('menu', location); navigateTo('/menu') }
+const goToDirections = (location: string) => { analytics.trackCta('directions', location); navigateTo('/contacts#map') }
+const goToEvents = (location: string) => { analytics.trackCta('next_event', location); navigateTo('/events') }
 
 // ── Variant selectors ────────────────────────────────────────
 // Use a client-only ref so SSR always renders defaults,
@@ -248,8 +220,8 @@ const marqueeText = computed(() =>
           </h1>
           <p class="h1-sub">{{ t('home.hero.subtitle') }}</p>
           <div class="hero-ctas">
-            <Button :label="t('home.cta.menu')" icon="pi pi-book" severity="warn" size="large" @click="navigateTo('/menu')" />
-            <Button :label="t('home.cta.directions')" icon="pi pi-map-marker" size="large" class="h1-outline-btn" @click="navigateTo('/contacts#map')" />
+            <Button :label="t('home.cta.menu')" icon="pi pi-book" severity="warn" size="large" @click="goToMenu('home_hero')" />
+            <Button :label="t('home.cta.directions')" icon="pi pi-map-marker" size="large" class="h1-outline-btn" @click="goToDirections('home_hero')" />
           </div>
         </div>
       </div>
@@ -354,7 +326,7 @@ const marqueeText = computed(() =>
           </div>
         </div>
         <div class="ev5-footer">
-          <Button :label="t('home.nextEvent.cta')" icon="pi pi-arrow-right" iconPos="right" severity="warn" @click="navigateTo('/events')" />
+          <Button :label="t('home.nextEvent.cta')" icon="pi pi-arrow-right" iconPos="right" severity="warn" @click="goToEvents('home_next_event')" />
         </div>
       </div>
 
@@ -366,7 +338,7 @@ const marqueeText = computed(() =>
             <h2 class="ev5-empty-title">{{ t('home.nextEvent.noEventsTitle') }}</h2>
             <p class="ev5-empty-sub">{{ t('home.nextEvent.noEventsSubtitle') }}</p>
           </div>
-          <Button :label="t('home.nextEvent.noEventsCta')" icon="pi pi-arrow-right" iconPos="right" severity="warn" @click="navigateTo('/events')" class="ev5-empty-cta" />
+          <Button :label="t('home.nextEvent.noEventsCta')" icon="pi pi-arrow-right" iconPos="right" severity="warn" @click="goToEvents('home_no_events')" class="ev5-empty-cta" />
         </div>
       </div>
 
@@ -395,8 +367,8 @@ const marqueeText = computed(() =>
       <h2 class="ct4-title">{{ t('home.cta.title') }}</h2>
       <p class="ct4-sub">{{ t('home.cta.subtitle') }}</p>
       <div class="hero-ctas ct-btns">
-        <Button :label="t('home.cta.menu')" icon="pi pi-book" severity="warn" size="large" @click="navigateTo('/menu')" />
-        <Button :label="t('home.cta.directions')" icon="pi pi-map-marker" size="large" class="ct4-outline-btn" @click="navigateTo('/contacts#map')" />
+        <Button :label="t('home.cta.menu')" icon="pi pi-book" severity="warn" size="large" @click="goToMenu('home_footer_cta')" />
+        <Button :label="t('home.cta.directions')" icon="pi pi-map-marker" size="large" class="ct4-outline-btn" @click="goToDirections('home_footer_cta')" />
       </div>
     </div>
 

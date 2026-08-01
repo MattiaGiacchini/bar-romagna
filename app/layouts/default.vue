@@ -6,6 +6,10 @@ import { useSchedule } from '@/composables/useSchedule'
 
 const { t, locale, locales, setLocale } = useI18n()
 const { displaySchedule } = useSchedule(barSchedules)
+const analytics = useAnalytics()
+
+// Keep the active locale attached as a super property on every event.
+onMounted(() => analytics.setLocale(locale.value))
 
 const navItems = computed(() => [
   { label: t('nav.home'), icon: 'pi pi-home', route: '/' },
@@ -19,7 +23,12 @@ const langMenuVisible = ref(false)
 
 const toggleMobileMenu = () => { mobileMenuVisible.value = !mobileMenuVisible.value }
 const closeMobileMenu = () => { mobileMenuVisible.value = false }
-const goHome = () => navigateTo('/')
+const goHome = () => { analytics.trackNav('logo', '/', 'desktop'); navigateTo('/') }
+
+const goToRoute = (label: string, route: string, source: 'desktop' | 'mobile') => {
+  analytics.trackNav(label, route, source)
+  navigateTo(route)
+}
 
 // Maps locale code -> ISO 3166-1 alpha-2 country code for flag-icons
 const countryCodeMap: Record<string, string> = {
@@ -37,6 +46,7 @@ const currentLocale = computed(() =>
 )
 
 const switchLocale = (code: string) => {
+  analytics.trackLanguageSwitch(locale.value, code)
   setLocale(code)
   langMenuVisible.value = false
 }
@@ -87,7 +97,7 @@ const switchLocale = (code: string) => {
               :icon="item.icon"
               text
               iconPos="left"
-              @click="() => navigateTo(item.route)"
+              @click="() => goToRoute(item.label, item.route, 'desktop')"
             />
             <!-- Language switcher desktop -->
             <div class="lang-switcher">
@@ -139,7 +149,7 @@ const switchLocale = (code: string) => {
           :key="item.route"
           :to="item.route"
           class="mobile-nav-item"
-          @click="closeMobileMenu"
+          @click="analytics.trackNav(item.label, item.route, 'mobile'); closeMobileMenu()"
         >
           <i :class="item.icon" />
           <span>{{ item.label }}</span>
@@ -210,15 +220,15 @@ const switchLocale = (code: string) => {
           <div class="footer-section">
             <div class="footer-title">{{ t('footer.contacts') }}</div>
             <div class="footer-info">
-              <a href="tel:+393395936104" class="contact-link">
+              <a href="tel:+393395936104" class="contact-link" @click="analytics.trackContact({ method: 'call', person: 'nadia', location: 'footer' })">
                 <i class="pi pi-phone" />
                 Nadia: +39 339 593 6104
               </a>
-              <a href="tel:+393473746945" class="contact-link">
+              <a href="tel:+393473746945" class="contact-link" @click="analytics.trackContact({ method: 'call', person: 'mattia', location: 'footer' })">
                 <i class="pi pi-phone" />
                 Mattia: +39 347 37 46 945
               </a>
-              <a href="mailto:barromagna.cervia@gmail.com" class="contact-link">
+              <a href="mailto:barromagna.cervia@gmail.com" class="contact-link" @click="analytics.trackContact({ method: 'email', person: 'generic', location: 'footer' })">
                 <i class="pi pi-envelope" />
                 barromagna.cervia@gmail.com
               </a>
@@ -230,15 +240,18 @@ const switchLocale = (code: string) => {
             <div class="footer-title">{{ t('footer.social') }}</div>
             <div class="social-icons">
               <a
-                href="https://www.facebook.com/barromagna"
+                href="https://www.facebook.com/p/Bar-Romagna-100094631556500/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
                 class="social-link"
+                @click="analytics.trackSocial('facebook')"
               >
                 <Button icon="pi pi-facebook" rounded severity="warn" aria-label="Facebook" />
               </a>
+              <!-- Instagram hidden for now — set v-if to true to re-enable -->
               <a
+                v-if="false"
                 href="https://www.instagram.com/barromagna"
                 target="_blank"
                 rel="noopener noreferrer"

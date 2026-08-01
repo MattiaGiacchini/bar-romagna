@@ -37,18 +37,23 @@ import { barSchedules } from '@/utils/schedule'
 
 const { t } = useI18n()
 const { barStatus, displaySchedule } = useSchedule(barSchedules)
+const analytics = useAnalytics()
 
-const openMaps = () =>
+const openMaps = () => {
+  analytics.trackDirections('contacts')
   window.open(
     'https://www.google.com/maps/place/Bar+Romagna/@44.2524022,12.3110341,11.82z/data=!4m6!3m5!1s0x132cb1f33caaf7d7:0xef2fc4fe22e8018e!8m2!3d44.2562331!4d12.2766308',
     '_blank'
   )
+}
 
-const callNadia   = () => { window.location.href = 'tel:+393395936104' }
-const callMattia  = () => { window.location.href = 'tel:+393473746945' }
-const sendEmail   = () => { window.location.href = 'mailto:barromagna.cervia@gmail.com' }
-const openWhatsAppNadia  = () => window.open('https://wa.me/393395936104', '_blank')
-const openWhatsAppMattia = () => window.open('https://wa.me/393473746945', '_blank')
+const callNadia   = () => { analytics.trackContact({ method: 'call', person: 'nadia', location: 'contacts' }); window.location.href = 'tel:+393395936104' }
+const callMattia  = () => { analytics.trackContact({ method: 'call', person: 'mattia', location: 'contacts' }); window.location.href = 'tel:+393473746945' }
+const sendEmail   = () => { analytics.trackContact({ method: 'email', person: 'generic', location: 'contacts' }); window.location.href = 'mailto:barromagna.cervia@gmail.com' }
+const openWhatsAppNadia  = () => { analytics.trackContact({ method: 'whatsapp', person: 'nadia', location: 'contacts' }); window.open('https://wa.me/393395936104', '_blank') }
+const openWhatsAppMattia = () => { analytics.trackContact({ method: 'whatsapp', person: 'mattia', location: 'contacts' }); window.open('https://wa.me/393473746945', '_blank') }
+
+const goToMenu = () => { analytics.trackCta('menu', 'contacts_hero'); navigateTo('/menu') }
 </script>
 
 <template>
@@ -81,7 +86,7 @@ const openWhatsAppMattia = () => window.open('https://wa.me/393473746945', '_bla
                 icon="pi pi-book"
                 severity="warn"
                 size="large"
-                @click="() => navigateTo('/menu')"
+                @click="goToMenu"
               />
               <Button
                 :label="t('contacts.actions.directions')"
