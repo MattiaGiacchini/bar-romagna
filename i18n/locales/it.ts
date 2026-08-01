@@ -85,8 +85,8 @@ export default {
     about: {
       tag: 'La nostra storia',
       title: 'Una famiglia,\nun bar.',
-      p1: 'Il Bar Romagna nasce a Cervia nel 2007 come punto di ritrovo del quartiere. Un bancone, qualche tavolino, e il profumo del caffè appena fatto.',
-      p2: 'Oggi lo gestiscono Nadia e Mattia con la stessa passione di sempre. La ricetta non è cambiata: caffè buono, prezzi onesti, e un sorriso ogni mattina.',
+      p1: 'Il Bar Romagna nasce a Castiglione di Cervia nel 2007 come punto di ritrovo del quartiere. Un bancone, qualche tavolino, e il profumo del caffè appena fatto.',
+      p2: 'Nadia e Mattia lo hanno fondato insieme, e da quasi vent\'anni la ricetta non è cambiata: caffè buono, prezzi onesti, e un sorriso ogni mattina.',
       p3: 'Che tu venga per la colazione, per un aperitivo o solo per fare due chiacchiere, qui trovi sempre qualcuno che ti conosce per nome.',
       quote: '"Un caffè qui vale più di mille parole. Siamo a Cervia dal 2007 — e non ci fermiamo."',
       quoteAuthor: '— Nadia',
