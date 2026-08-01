@@ -1,15 +1,16 @@
 <script setup lang="ts">
-// EventGallery — responsive media grid + lightbox.
+// EventGallery — responsive media grid (or horizontal filmstrip) + reusable lightbox.
 // Supports images and locally-hosted videos (served from /public, no YouTube).
 // Renders nothing when there is no media, so it's safe to always mount.
 
-import { ref, computed, onBeforeUnmount, watch } from 'vue'
+import { ref, computed } from 'vue'
 import type { MediaItem } from '@/utils/events'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   media: MediaItem[]
   title?: string
-}>()
+  layout?: 'grid' | 'filmstrip'
+}>(), { layout: 'grid' })
 
 const analytics = useAnalytics()
 
@@ -19,48 +20,18 @@ const hasMedia = computed(() => items.value.length > 0)
 const lightboxOpen = ref(false)
 const activeIndex = ref(0)
 
-const activeItem = computed(() => items.value[activeIndex.value])
-
 const open = (index: number) => {
   activeIndex.value = index
   lightboxOpen.value = true
   analytics.trackGalleryOpen(index, items.value[index]?.type ?? 'image', items.value.length)
 }
-
-const close = () => { lightboxOpen.value = false }
-
-const next = () => {
-  activeIndex.value = (activeIndex.value + 1) % items.value.length
-  analytics.trackGalleryNavigate('next')
-}
-const prev = () => {
-  activeIndex.value = (activeIndex.value - 1 + items.value.length) % items.value.length
-  analytics.trackGalleryNavigate('prev')
-}
-
-const onKeydown = (e: KeyboardEvent) => {
-  if (!lightboxOpen.value) return
-  if (e.key === 'ArrowRight') next()
-  else if (e.key === 'ArrowLeft') prev()
-  else if (e.key === 'Escape') close()
-}
-
-watch(lightboxOpen, (isOpen) => {
-  if (typeof window === 'undefined') return
-  if (isOpen) window.addEventListener('keydown', onKeydown)
-  else window.removeEventListener('keydown', onKeydown)
-})
-
-onBeforeUnmount(() => {
-  if (typeof window !== 'undefined') window.removeEventListener('keydown', onKeydown)
-})
 </script>
 
 <template>
   <section v-if="hasMedia" class="gallery">
     <h2 v-if="title" class="gallery-title">{{ title }}</h2>
 
-    <div class="gallery-grid">
+    <div class="gallery-grid" :class="`gallery-grid--${layout}`">
       <button
         v-for="(item, i) in items"
         :key="item.src"
@@ -97,67 +68,17 @@ onBeforeUnmount(() => {
       </button>
     </div>
 
-    <!-- Lightbox -->
-    <Dialog
+    <CommonLightbox
       v-model:visible="lightboxOpen"
-      modal
-      dismissableMask
-      :showHeader="false"
-      class="lightbox-dialog"
-      :pt="{ root: { class: 'lightbox-root' }, mask: { class: 'lightbox-mask' } }"
-    >
-      <div v-if="activeItem" class="lightbox">
-        <button type="button" class="lightbox-close" aria-label="Chiudi" @click="close">
-          <i class="pi pi-times" />
-        </button>
-
-        <button
-          v-if="items.length > 1"
-          type="button"
-          class="lightbox-nav lightbox-nav--prev"
-          aria-label="Precedente"
-          @click="prev"
-        >
-          <i class="pi pi-chevron-left" />
-        </button>
-
-        <div class="lightbox-stage">
-          <img
-            v-if="activeItem.type === 'image'"
-            :src="activeItem.src"
-            :alt="activeItem.alt"
-            class="lightbox-media"
-          />
-          <video
-            v-else
-            :key="activeItem.src"
-            :src="activeItem.src"
-            :poster="activeItem.poster"
-            class="lightbox-media"
-            controls
-            autoplay
-            playsinline
-          />
-          <p v-if="activeItem.alt" class="lightbox-caption">{{ activeItem.alt }}</p>
-        </div>
-
-        <button
-          v-if="items.length > 1"
-          type="button"
-          class="lightbox-nav lightbox-nav--next"
-          aria-label="Successivo"
-          @click="next"
-        >
-          <i class="pi pi-chevron-right" />
-        </button>
-      </div>
-    </Dialog>
+      v-model:index="activeIndex"
+      :items="items"
+      @navigate="(dir) => analytics.trackGalleryNavigate(dir)"
+    />
   </section>
 </template>
 
 <style scoped lang="scss">
 // Typography: h2 heading font is set globally in theme.scss (BigChunko) — no override here.
-$r: 16px;
 $r-sm: 10px;
 
 .gallery {
@@ -171,13 +92,32 @@ $r-sm: 10px;
   color: var(--p-primary-color);
 }
 
-.gallery-grid {
+// ── Grid layout ──────────────────────────────────────────────
+.gallery-grid--grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.625rem;
 
   @media (min-width: 640px)  { grid-template-columns: repeat(3, 1fr); }
   @media (min-width: 1024px) { grid-template-columns: repeat(4, 1fr); }
+}
+
+// ── Filmstrip layout — horizontal scroll, square cells ──────
+.gallery-grid--filmstrip {
+  display: flex;
+  gap: 0.625rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--p-surface-400) transparent;
+  cursor: grab;
+  &:active { cursor: grabbing; }
+
+  .gallery-cell {
+    flex-shrink: 0;
+    width: 180px;
+    @media (min-width: 768px) { width: 240px; }
+  }
 }
 
 .gallery-cell {
@@ -224,102 +164,5 @@ $r-sm: 10px;
     background: rgba(0, 0, 0, 0.55);
     padding-left: 3px; // optically center the play triangle
   }
-}
-
-// ── Lightbox ─────────────────────────────────────────────────
-.lightbox {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.lightbox-stage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  max-width: 90vw;
-}
-
-.lightbox-media {
-  max-width: 90vw;
-  max-height: 80vh;
-  width: auto;
-  height: auto;
-  border-radius: $r-sm;
-  object-fit: contain;
-  background: #000;
-}
-
-.lightbox-caption {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.875rem;
-  text-align: center;
-  max-width: 90vw;
-}
-
-.lightbox-close {
-  position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
-  z-index: 2;
-  width: 44px;
-  height: 44px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s ease;
-
-  &:hover { background: rgba(255, 255, 255, 0.25); }
-}
-
-.lightbox-nav {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  width: 48px;
-  height: 48px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.125rem;
-  transition: background 0.15s ease;
-
-  &:hover { background: rgba(255, 255, 255, 0.25); }
-
-  &--prev { left: 1rem; }
-  &--next { right: 1rem; }
-}
-</style>
-
-<style lang="scss">
-// Unscoped: style the PrimeVue Dialog shell used as a bare lightbox container.
-.lightbox-root.p-dialog {
-  background: transparent;
-  box-shadow: none;
-  border: none;
-  max-width: 96vw;
-}
-.lightbox-root .p-dialog-content {
-  background: transparent;
-  padding: 0;
-  overflow: visible;
-}
-.lightbox-mask.p-dialog-mask {
-  background: rgba(0, 0, 0, 0.9);
 }
 </style>
