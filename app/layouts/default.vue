@@ -8,6 +8,15 @@ const { t, locale, locales, setLocale } = useI18n()
 const { displaySchedule } = useSchedule(barSchedules)
 const analytics = useAnalytics()
 
+// Inject hreflang alternate links, canonical, og:locale and html[lang] dynamically
+// based on the active locale. addSeoAttributes:true also sets og:locale.
+const localeHead = useLocaleHead({ addSeoAttributes: true })
+useHead(() => ({
+  htmlAttrs: localeHead.value.htmlAttrs ?? {},
+  link:      localeHead.value.link      ?? [],
+  meta:      localeHead.value.meta      ?? [],
+}))
+
 // Keep the active locale attached as a super property on every event.
 onMounted(() => analytics.setLocale(locale.value))
 

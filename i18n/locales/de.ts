@@ -2,6 +2,24 @@
 // German translations
 
 export default {
+  seo: {
+    home: {
+      title: 'Bar Romagna Cervia — Kaffee, Aperitivo & Abende seit 2007',
+      description: 'Bar Romagna ist die traditionsreiche Bar in Cervia seit 2007. Frühstück mit Cappuccino und Croissant, Aperitivo mit Spritz und Negroni, Abende mit Freunden. Geführt von Nadia und Mattia. Via Salara Statale 35/M.',
+    },
+    menu: {
+      title: 'Speisekarte — Bar Romagna Cervia | Kaffee, Aperitivo & Cocktails',
+      description: 'Entdecken Sie die vollständige Speisekarte der Bar Romagna in Cervia: Kaffee, Frühstück, Aperitivo mit Spritz und Negroni, Cocktails und Getränke. Faire Preise, handwerkliche Qualität.',
+    },
+    contacts: {
+      title: 'Kontakt — Bar Romagna Cervia | Öffnungszeiten, Karte & Telefon',
+      description: 'Finden Sie die Bar Romagna in Cervia: Öffnungszeiten, Adresse (Via Salara Statale 35/M), Telefonnummer und Karte. Kontaktieren Sie Nadia oder Mattia direkt.',
+    },
+    events: {
+      title: 'Veranstaltungen — Bar Romagna Cervia | Abende, Musik & Turniere',
+      description: 'Entdecken Sie die Veranstaltungen der Bar Romagna in Cervia: Live-Musikabende, Turniere und besondere Events. Bleiben Sie über das nächste Event informiert.',
+    },
+  },
   nav: {
     home: 'Start',
     contacts: 'Kontakt',

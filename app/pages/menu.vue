@@ -1,35 +1,58 @@
 <script setup lang="ts">
 import { menuData } from '@/utils/menu'
+import { SITE_URL, business, postalAddressSchema } from '@/utils/business'
 
 // ── SEO ──────────────────────────────────────────────────────
-const { locale } = useI18n()
-
-const seoTitle = computed(() =>
-  locale.value === 'it'
-    ? 'Menu — Bar Romagna Cervia | Caffetteria, Aperitivo & Cocktail'
-    : 'Menu — Bar Romagna Cervia | Coffee, Aperitivo & Cocktails'
-)
-const seoDesc = computed(() =>
-  locale.value === 'it'
-    ? 'Scopri il menu completo del Bar Romagna di Cervia: caffetteria, colazione, aperitivo con Spritz e Negroni, cocktail e bevande. Prezzi onesti, qualità artigianale.'
-    : 'Explore the full menu of Bar Romagna in Cervia: coffee bar, breakfast, aperitivo with Spritz and Negroni, cocktails and drinks. Honest prices, artisan quality.'
-)
+const { t } = useI18n()
 
 useSeoMeta({
-  title:              () => seoTitle.value,
-  description:        () => seoDesc.value,
-  ogTitle:            () => seoTitle.value,
-  ogDescription:      () => seoDesc.value,
-  ogUrl:              'https://www.barromagna.com/menu',
-  ogImage:            'https://www.barromagna.com/bar-view.jpg',
+  title:              () => t('seo.menu.title'),
+  description:        () => t('seo.menu.description'),
+  ogTitle:            () => t('seo.menu.title'),
+  ogDescription:      () => t('seo.menu.description'),
+  ogUrl:              `${SITE_URL}/menu`,
+  ogImage:            `${SITE_URL}/bar-view.jpg`,
   ogImageAlt:         'Bar Romagna Cervia — menu caffetteria e aperitivo',
-  twitterTitle:       () => seoTitle.value,
-  twitterDescription: () => seoDesc.value,
+  twitterTitle:       () => t('seo.menu.title'),
+  twitterDescription: () => t('seo.menu.description'),
 })
 
-useHead({
-  link: [{ rel: 'canonical', href: 'https://www.barromagna.com/menu' }],
-})
+// FoodEstablishment + Menu schema — uses t() so item names are in the active locale
+const menuJsonLd = computed(() => ({
+  '@context': 'https://schema.org',
+  '@type': 'FoodEstablishment',
+  name: business.name,
+  url: `${SITE_URL}/menu`,
+  telephone: business.telephone,
+  priceRange: business.priceRange,
+  servesCuisine: ['Caffetteria', 'Aperitivo', 'Cocktail'],
+  address: postalAddressSchema,
+  hasMenu: {
+    '@type': 'Menu',
+    name: t('seo.menu.title'),
+    url: `${SITE_URL}/menu`,
+    hasMenuSection: menuData.map(category => ({
+      '@type': 'MenuSection',
+      name: t(`menu.categories.${category.id}`),
+      hasMenuItem: category.sections.flatMap(section =>
+        section.items.map(item => ({
+          '@type': 'MenuItem',
+          name: t(`menu.items.${item.id}`),
+          offers: {
+            '@type': 'Offer',
+            price: item.price,
+            priceCurrency: 'EUR',
+          },
+        }))
+      ),
+    })),
+  },
+}))
+
+useHead(() => ({
+  link: [{ rel: 'canonical', href: `${SITE_URL}/menu` }],
+  script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(menuJsonLd.value) }],
+}))
 </script>
 
 <template>

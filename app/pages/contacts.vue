@@ -2,35 +2,27 @@
 // Contacts page — hero + info panel (hours/contacts/whatsapp) + map.
 import { useSchedule } from '@/composables/useSchedule'
 import { barSchedules } from '@/utils/schedule'
+import { SITE_URL, buildLocalBusinessJsonLd } from '@/utils/business'
 
 // ── SEO ──────────────────────────────────────────────────────
-const { locale } = useI18n()
-
-const seoTitle = computed(() =>
-  locale.value === 'it'
-    ? 'Contatti — Bar Romagna Cervia | Orari, Mappa & Telefono'
-    : 'Contact — Bar Romagna Cervia | Opening Hours, Map & Phone'
-)
-const seoDesc = computed(() =>
-  locale.value === 'it'
-    ? 'Trova il Bar Romagna a Cervia: orari di apertura, indirizzo (Via Salara Statale 35/M), numero di telefono e mappa. Contatta Nadia o Mattia direttamente.'
-    : 'Find Bar Romagna in Cervia: opening hours, address (Via Salara Statale 35/M), phone number and map. Contact Nadia or Mattia directly.'
-)
+const { t } = useI18n()
 
 useSeoMeta({
-  title:              () => seoTitle.value,
-  description:        () => seoDesc.value,
-  ogTitle:            () => seoTitle.value,
-  ogDescription:      () => seoDesc.value,
-  ogUrl:              'https://www.barromagna.com/contacts',
-  ogImage:            'https://www.barromagna.com/bar-view.jpg',
+  title:              () => t('seo.contacts.title'),
+  description:        () => t('seo.contacts.description'),
+  ogTitle:            () => t('seo.contacts.title'),
+  ogDescription:      () => t('seo.contacts.description'),
+  ogUrl:              `${SITE_URL}/contacts`,
+  ogImage:            `${SITE_URL}/bar-view.jpg`,
   ogImageAlt:         'Bar Romagna Cervia — contatti e orari',
-  twitterTitle:       () => seoTitle.value,
-  twitterDescription: () => seoDesc.value,
+  twitterTitle:       () => t('seo.contacts.title'),
+  twitterDescription: () => t('seo.contacts.description'),
 })
 
+// LocalBusiness schema on the contacts page — strongest NAP signal page
 useHead({
-  link: [{ rel: 'canonical', href: 'https://www.barromagna.com/contacts' }],
+  link: [{ rel: 'canonical', href: `${SITE_URL}/contacts` }],
+  script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(buildLocalBusinessJsonLd()) }],
 })
 
 const { barStatus, displaySchedule } = useSchedule(barSchedules)

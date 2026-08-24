@@ -2,39 +2,44 @@
 // Events listing page — hero + category filter + upcoming/past grids.
 import { pastEvents, upcomingEvents } from '@/utils/events'
 import type { EventCategory } from '@/utils/events'
+import { SITE_URL } from '@/utils/business'
 
 // ── SEO ──────────────────────────────────────────────────────
-const { locale } = useI18n()
-
-const seoTitle = computed(() =>
-  locale.value === 'it'
-    ? 'Eventi — Bar Romagna Cervia | Serate, Musica & Tornei'
-    : 'Events — Bar Romagna Cervia | Evenings, Music & Tournaments'
-)
-const seoDesc = computed(() =>
-  locale.value === 'it'
-    ? 'Scopri gli eventi del Bar Romagna a Cervia: serate musicali, tornei, feste ed eventi speciali. Resta aggiornato sul prossimo appuntamento.'
-    : 'Discover Bar Romagna events in Cervia: live music nights, tournaments and special events. Stay updated on the next event.'
-)
-
-useSeoMeta({
-  title:              () => seoTitle.value,
-  description:        () => seoDesc.value,
-  ogTitle:            () => seoTitle.value,
-  ogDescription:      () => seoDesc.value,
-  ogUrl:              'https://www.barromagna.com/events',
-  ogImage:            'https://www.barromagna.com/bar-view.jpg',
-  ogImageAlt:         'Bar Romagna Cervia — eventi e serate',
-  twitterTitle:       () => seoTitle.value,
-  twitterDescription: () => seoDesc.value,
-})
-
-useHead({
-  link: [{ rel: 'canonical', href: 'https://www.barromagna.com/events' }],
-})
-
 const { t } = useI18n()
 const analytics = useAnalytics()
+
+useSeoMeta({
+  title:              () => t('seo.events.title'),
+  description:        () => t('seo.events.description'),
+  ogTitle:            () => t('seo.events.title'),
+  ogDescription:      () => t('seo.events.description'),
+  ogUrl:              `${SITE_URL}/events`,
+  ogImage:            `${SITE_URL}/bar-view.jpg`,
+  ogImageAlt:         'Bar Romagna Cervia — eventi e serate',
+  twitterTitle:       () => t('seo.events.title'),
+  twitterDescription: () => t('seo.events.description'),
+})
+
+// ItemList schema — helps Google discover all event detail pages from the listing page
+const allEvents = [...upcomingEvents, ...pastEvents]
+const eventListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Eventi Bar Romagna Cervia',
+  url: `${SITE_URL}/events`,
+  numberOfItems: allEvents.length,
+  itemListElement: allEvents.map((ev, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `${SITE_URL}/events/${ev.slug}`,
+    name: ev.title,
+  })),
+}
+
+useHead({
+  link: [{ rel: 'canonical', href: `${SITE_URL}/events` }],
+  script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(eventListJsonLd) }],
+})
 
 type FilterValue = EventCategory | 'all'
 

@@ -17,29 +17,28 @@ export default defineNuxtConfig({
   ],
 
   // ── Global head defaults ──────────────────────────────────────
+  // Note: htmlAttrs.lang and og:locale are set dynamically per-locale in the layout
+  // via useLocaleHead(). Only truly static, locale-independent defaults live here.
   app: {
     head: {
-      htmlAttrs: { lang: 'it' },
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      link: [
-        // Canonical fallback — overridden per-page
-        { rel: 'canonical', href: SITE_URL }
-      ],
       meta: [
         // Default title + description (overridden per-page via useSeoMeta)
         { name: 'description',        content: 'Bar Romagna a Cervia dal 2007. Colazione, aperitivo e serate. Via Salara Statale 35/M. Gestito da Nadia e Mattia.' },
-        // Open Graph defaults
+        // Open Graph defaults (og:locale set dynamically in layout)
         { property: 'og:type',        content: 'website' },
         { property: 'og:site_name',   content: 'Bar Romagna Cervia' },
         { property: 'og:url',         content: SITE_URL },
         { property: 'og:image',       content: `${SITE_URL}/bar-view.jpg` },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height',content: '630' },
-        { property: 'og:locale',      content: 'it_IT' },
         // Twitter Card defaults
         { name: 'twitter:card',       content: 'summary_large_image' },
+        { name: 'twitter:site',       content: '@barromagna' },
         { name: 'twitter:image',      content: `${SITE_URL}/bar-view.jpg` },
+        // Robots — explicit index/follow on all pages
+        { name: 'robots',             content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' },
         // Geo + local business signals
         { name: 'geo.region',         content: 'IT-RA' },
         { name: 'geo.placename',      content: 'Cervia' },
@@ -76,6 +75,8 @@ export default defineNuxtConfig({
     defaultLocale: 'it',
     langDir: 'locales',
     strategy: 'no_prefix',
+    // Enables useLocaleHead() to emit hreflang alternate links and og:locale
+    seo: true,
   },
 
   // ── Sitemap ──────────────────────────────────────────────────

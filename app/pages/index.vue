@@ -3,36 +3,25 @@
 import { useSchedule } from '@/composables/useSchedule'
 import { barSchedules } from '@/utils/schedule'
 import { upcomingEvents, type MediaItem } from '@/utils/events'
-import { buildLocalBusinessJsonLd } from '@/utils/business'
+import { buildLocalBusinessJsonLd, SITE_URL } from '@/utils/business'
 
 // ── SEO ──────────────────────────────────────────────────────
-const { locale, t } = useI18n()
-
-const seoTitle = computed(() =>
-  locale.value === 'it'
-    ? 'Bar Romagna Cervia — Caffè, Aperitivo & Serate dal 2007'
-    : 'Bar Romagna Cervia — Coffee, Aperitivo & Evenings since 2007'
-)
-const seoDesc = computed(() =>
-  locale.value === 'it'
-    ? 'Bar Romagna è il bar storico di Cervia dal 2007. Colazione con cappuccino e cornetto, aperitivo con Spritz e Negroni, serate tra amici. Gestito da Nadia e Mattia. Via Salara Statale 35/M.'
-    : "Bar Romagna is Cervia's historic bar since 2007. Breakfast, aperitivo and evenings with friends. Run by Nadia and Mattia. Via Salara Statale 35/M, Cervia."
-)
+const { t } = useI18n()
 
 useSeoMeta({
-  title:              () => seoTitle.value,
-  description:        () => seoDesc.value,
-  ogTitle:            () => seoTitle.value,
-  ogDescription:      () => seoDesc.value,
-  ogUrl:              'https://www.barromagna.com',
-  ogImage:            'https://www.barromagna.com/bar-view.jpg',
+  title:              () => t('seo.home.title'),
+  description:        () => t('seo.home.description'),
+  ogTitle:            () => t('seo.home.title'),
+  ogDescription:      () => t('seo.home.description'),
+  ogUrl:              SITE_URL,
+  ogImage:            `${SITE_URL}/bar-view.jpg`,
   ogImageAlt:         'Bar Romagna Cervia — vista del bancone',
-  twitterTitle:       () => seoTitle.value,
-  twitterDescription: () => seoDesc.value,
+  twitterTitle:       () => t('seo.home.title'),
+  twitterDescription: () => t('seo.home.description'),
 })
 
 useHead({
-  link: [{ rel: 'canonical', href: 'https://www.barromagna.com' }],
+  link: [{ rel: 'canonical', href: SITE_URL }],
   script: [{
     type: 'application/ld+json',
     innerHTML: JSON.stringify(buildLocalBusinessJsonLd()),
