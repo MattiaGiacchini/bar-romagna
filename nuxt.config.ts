@@ -23,6 +23,12 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/favicon-192.png' },
+        { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/favicon-512.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+      ],
       meta: [
         // Default title + description (overridden per-page via useSeoMeta)
         { name: 'description',        content: 'Bar Romagna a Cervia dal 2007. Colazione, aperitivo e serate. Via Salara Statale 35/M. Gestito da Nadia e Mattia.' },
