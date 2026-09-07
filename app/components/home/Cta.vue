@@ -29,7 +29,7 @@ $r: 16px;
 }
 .ct-btns { justify-content: center; }
 
-.ct4 { background: var(--p-primary-800); border-radius: $r; padding: 3.5rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.ct4 { background: var(--p-surface-500); border-radius: $r; padding: 3.5rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
 .ct4-title { margin: 0; color: white; font-size: clamp(1.75rem, 5vw, 3.25rem); }
 .ct4-sub { margin: 0; font-size: 1rem; line-height: 1.6; color: rgba(255,255,255,0.8); max-width: 480px; }
 .ct4-outline-btn {
