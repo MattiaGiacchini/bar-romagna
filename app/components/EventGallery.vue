@@ -109,7 +109,6 @@ $r-sm: 10px;
   overflow-x: auto;
   padding-bottom: 0.5rem;
   scrollbar-width: thin;
-  scrollbar-color: var(--p-surface-400) transparent;
   cursor: grab;
   &:active { cursor: grabbing; }
 
